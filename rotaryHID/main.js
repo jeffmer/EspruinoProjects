@@ -27,9 +27,10 @@ function createSwitch(pinA){
   var state = pinA.read();
   
   function handler(){
-    if (state!=pinA.read()){
-      OBJ.emit("change",!pinA.read());
-      state=pinA.read();
+    var ns = pinA.read();
+    if (state!=ns){
+      OBJ.emit("change",!ns);
+      state=ns;
     }
   }
   setWatch(handler,pinA,{repeat:true,edge:"both"});
