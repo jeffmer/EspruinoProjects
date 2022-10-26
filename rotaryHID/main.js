@@ -24,16 +24,11 @@ function createEncoder(pinA,pinB){
 function createSwitch(pinA){
   pinMode(pinA,"input_pullup");
   var OBJ = {};
-  var state = pinA.read();
   
-  function handler(){
-    var ns = pinA.read();
-    if (state!=ns){
-      OBJ.emit("change",!ns);
-      state=ns;
-    }
+  function handler(ns){
+      OBJ.emit("change",!ns.state);
   }
-  setWatch(handler,pinA,{repeat:true,edge:"both"});
+  setWatch(handler,pinA,{repeat:true,edge:"both",debounce:25});
   return OBJ;
 }
 
