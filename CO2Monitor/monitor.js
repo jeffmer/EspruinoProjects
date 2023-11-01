@@ -92,7 +92,7 @@ E.on("charging",function(v){
 
 E.on("kill",function(){SCD41.stopMeas();});
 
-SCD41.setTempOffset(7);
+SCD41.setTempOffset(0);
 SCD41.startLowPowerMeas();
 drawDisp();
 setInterval(drawDisp,30000);

@@ -14,7 +14,7 @@ SENSI2C.setup({scl:D42,sda:D43,bitrate:200000});
 global.SCD41 = {
     delay_ms:function(d) {var t = getTime()+d/1000; while(getTime()<t);},
     wcd:function(v){
-        var cbuf = new Uint8Array([v>>8,v,crc_code.gencrc(v)]);
+        var cbuf = new Uint8Array([v>>8,v]);
         SENSI2C.writeTo(0x62,cbuf);
     },
     startMeas:function(){this.wcd(0x21b1);},
@@ -36,10 +36,17 @@ global.SCD41 = {
         return (((resp[0]<<8)+resp[1])&0x7ff) != 0;
     },
     setTempOffset(v){
-        this.wcd(0xe4b8);
         val = Math.floor(v*65535/175);
-        this.wcd(val);
+        var cbuf = new Uint8Array([0x24,0x1d,val>>8,val,crc_code.gencrc(val)]);
+        SENSI2C.writeTo(0x62,cbuf);
         this.delay_ms(1);
+    },
+    getTempOffset(){
+        this.wcd(0x2318);
+        this.delay_ms(1);
+        var resp = SENSI2C.readFrom(0x62,3);
+        return 175*((resp[0]<<8)+resp[1])/65535;
     }
+
 };
 
