@@ -13,7 +13,7 @@ var W = g.getWidth();
 var H = g.getHeight();
 var scale = 0.6;
 
-function drawBat(v) {
+function drawBat(v){
   var s = 39;
   x = W-44; y = 2;
   g.fillRect(x,y+2,x+s-4,y+21);
@@ -22,12 +22,17 @@ function drawBat(v) {
   g.fillRect(x+4,y+6,x+4+Math.ceil(v*(s-12)/100),y+17);
 }
 
+
 var connected = false;
 
 function drawBlue(){
   g.drawImage(atob("CxQBBgDgFgJgR4jZMawfAcA4D4NYybEYIwTAsBwDAA=="), 4, 100);
 }
-  
+
+function drawCharging(){
+  g.drawImage(atob("DhgBHOBzgc4HOP////////////////////3/4HgB4AeAHgB4AeAHgB4AeAHg"),W-62,2);
+}
+    
 function drawClock(){
   var now=Date();
   d=now.toString().split(' ');
@@ -48,6 +53,7 @@ function drawClock(){
   g.setFontVector(16);
   g.drawString(""+E.getTemperature().toFixed(1)+"C",4,4);
   drawBat(E.getBattery());
+  if (E.charging) drawCharging();
   if (connected) drawBlue();
   g.flip();
 }
@@ -63,6 +69,15 @@ NRF.on("disconnect", function(a){
   connected=false;
   g.flip();
 });
+
+E.on("charging",function(v){
+  if (v) 
+    drawCharging();
+  else
+    g.clearRect(W-62,2,W-45,25);
+  g.flip();
+});
+
 
 drawClock();
 setInterval(drawClock,30000);
