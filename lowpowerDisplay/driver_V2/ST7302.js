@@ -1,11 +1,11 @@
 // Low power display module - j.n.magee 2023
 // for source of native code see file c-code.c
 var code = (function(){
-    var bin=atob("LenwTy5MfESFsCRoApQtTAOTfERP8AwK1PgAwE/wCAuQQkjcAPABCAIkD0aQ+/T0iPABCAGUT/ABCQObn0I43Jf7+vYBnQr7FnRP8H0ODvsGVsTxCwQG60YFSOpEBJT7+/bG8QIGLkQCnZf7+/76IwP7Dl4RTT1AAC24vwXx/zWGRLy/ZfAHBQE1nvgA4An6BfUe6gUPBPAHBBz4BlAJ+gT0FL8sQyXqBAQM+AZAATfD5wEwtOcFsL3o8I8HAACA2gAAAMoAAAABS3tEGGBwRxYAAAABS3tEGGBwRwYAAAAAAAAAAAAAAA==");
+    var bin=atob("LenwT0/q4wgrS3tEhbAbaAGTKksCkntEyRAbaE/wDAxP8AEOApqQQkLcAiSQ+/T0AJQA8AEEhPABBA5GA5RGRTTcAZwlGPokdENP6sYKFfgEkAAnB+sKBAOalPv89Qz7FUTE8QsEQupEBACaT/B9Cwv7BSUF60UL5RDF8QIFXUQO+gf7G+oJDwTwBwQT+AWwDvoE9AfxAQcUv0TqCwQr6gQECC9cVdXRATbI5wEwuecFsL3o8I8Av84AAAC+AAAAAUt7RBhgcEcWAAAAAUt7RBhgcEcGAAAAAAAAAAAAAAA=");
     return {
       update:E.nativeCall(1, "void(int,int,int,int)", bin),
-      setscrnbuf:E.nativeCall(213, "void(int)", bin),
-      setimgbuf:E.nativeCall(201, "void(int)", bin),
+      setscrnbuf:E.nativeCall(205, "void(int)", bin),
+      setimgbuf:E.nativeCall(193, "void(int)", bin),
     };
   })();
 

@@ -9,9 +9,20 @@ var g = require("ST7302").connect({
 });
 */
 eval(STOR.read("scd41.js"));
+eval(STOR.read("trend.js"));
 
 var W = g.getWidth();
 var H = g.getHeight();
+
+var CO2 = new Trend("CO2","ppm",400,1400);
+var Humd = new Trend("Humd","%",0,100);
+var Temp = new Trend("Temp","C",10,30);
+
+E.on("kill",function(){
+  CO2.save();
+  Humd.save();
+  Temp.save();
+});
 
 function drawBat(v){
   var s = 39;
@@ -36,11 +47,41 @@ function drawCharging(){
 READING = {co2:400, temp:20.1, humid:90};
 
 function drawReading(x,y){
-    if(SCD41.dataready()) READING = SCD41.readMeas();
     g.setFontAlign(-1,-1).setFontVector(16);
     g.drawString("CO2 : "+READING.co2+"ppm",x,y);
     g.drawString("Temp: "+READING.temp.toFixed(1)+"C",x,y+20);
     g.drawString("Humd: "+READING.humid.toFixed(0)+"%",x,y+40);
+}
+
+var flash;
+
+function start_flash(){
+  if (flash) return;
+  flash = setInterval(function() {
+    LED1.set();
+    setTimeout(()=>LED1.reset(),100);
+  }, 5000);
+}
+
+function end_flash(){
+  if (flash) flash = clearInterval(flash);
+}
+
+function oneShot(){
+  SCD41.oneShotMeas();
+  setTimeout(function(){
+    if(SCD41.dataready()) READING = SCD41.readMeas();
+    if (READING.co2>1100)
+      start_flash();
+    else
+      end_flash();
+  },5000);
+}
+
+function record(){
+  CO2.record(READING.co2);
+  Humd.record(READING.humid);
+  Temp.record(READING.temp);
 }
 
 function drawClock(x,y){
@@ -93,6 +134,31 @@ E.on("charging",function(v){
 E.on("kill",function(){SCD41.stopMeas();});
 
 SCD41.setTempOffset(0.5);
-SCD41.startLowPowerMeas();
-drawDisp();
-setInterval(drawDisp,30000);
+oneShot();
+setInterval(oneShot,300000);
+setTimeout(()=>record(),5500);
+setInterval(record,600000)
+
+var tdisp = 0;
+var iRef;
+
+function doDisp(id){
+  if (iRef) clearInterval(iRef);
+  if (id==0){
+    drawDisp();
+    iRef = setInterval(drawDisp,30000);
+  } else if (id==1) 
+    CO2.draw();
+  else if (id==2)
+    Humd.draw();
+  else if (id==3)
+    Temp.draw();
+}
+
+doDisp(tdisp);
+
+setWatch(function(){
+  tdisp = (tdisp+1) % 4;
+  doDisp(tdisp);
+},BTN1,{repeat:true,edge:"falling"});
+

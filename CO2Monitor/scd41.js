@@ -19,6 +19,7 @@ global.SCD41 = {
     },
     startMeas:function(){this.wcd(0x21b1);},
     startLowPowerMeas:function(){this.wcd(0x21ac);},
+    oneShotMeas:function(){this.wcd(0x219d);},
     stopMeas:function(){this.wcd(0x3f86);},
     readMeas:function(){
         this.wcd(0xec05);
