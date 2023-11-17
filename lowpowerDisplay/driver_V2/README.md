@@ -7,3 +7,10 @@ It takes 146ms to render the example clock face with widgets.
 73ms to do a `g.clear();g.flip()`  of which `g.flip` takes 49ms. 
 
 However, partial updates are faster as only the modified part of the image buffer is is written to the screen buffer.
+
+### Updated Version 2
+
+The recent commit improves the performance at the expense of a more complex update routine. 
+
+It now takes 127ms to render the example with `g.flip` tahing 31ms.
+
