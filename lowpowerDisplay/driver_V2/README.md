@@ -12,5 +12,12 @@ However, partial updates are faster as only the modified part of the image buffe
 
 The recent commit improves the performance at the expense of a more complex update routine. 
 
-It now takes 127ms to render the example with `g.flip` tahing 31ms.
+It now takes 127ms to render the example with `g.flip` taking 31ms.
+
+
+### and....
+
+Unrolling the inner loop in update gives:
+
+121ms to render the example with `g.flip` taking 24 ms.
 

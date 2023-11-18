@@ -97,12 +97,12 @@ function drawClock(x,y){
     g.drawString(tm,x,y);
     g.setFontVector(20);
     var dt=d[0]+" "+d[2]+" "+d[1];//+" "+d[3];
-    g.drawString(dt,x,y+24);
+    g.drawString(dt,x,y+28);
 }
 
 function drawDisp(){
   g.clearRect(0,0,W-1,H-1);
-  drawClock(60,H/2-4);
+  drawClock(60,H/2-6);
   drawBat(E.getBattery());
   if (E.charging) drawCharging();
   if (connected) drawBlue();

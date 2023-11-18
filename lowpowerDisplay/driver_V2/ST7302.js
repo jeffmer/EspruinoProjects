@@ -1,12 +1,12 @@
 // Low power display module - j.n.magee 2023
-// for source of native code see file c-code.c
+// for source of native code see file c-codev3.c
 
 var code = (function(){
-    var bin=atob("LenwT0/q4wowS3tEibAbaAKTL0sFkntEyRAbaACRT/AMCE/wAQkFmpBCTNwCIZD78fEBkQKZAJ4BRAaRAPABAYHwAQEHkVZFO9z6IQaccUNhXAOR8QAEkQAkBJkHnyFEkfv49Qj7FRHB8QsBR+pBAQGffSIC+wV1BetFB80QxfECBT1EAfAHAV9dBPEEC6ZG3kUQ0AOaCfoO/BzqAg8J+gH8Gr9M6gcH/7In6gwHAjkO8QEO7OcENAgsX1XN0QE2wecBMK/nCbC96PCP4gAAANIAAAABS3tEGGBwRxYAAAABS3tEGGBwRwYAAAAAAAAAAAAAAA==");
+    var bin=atob("LenwT4mw2xACk2RLe0SQRhtoBJNiS3tEyhDT+ACQAZJP8AwKQEUA87aAAiOQ+/PzA5MEmwGeA0QGkwDwAQOD8AEDB5MCm55CAPOjgPojc0MGmtFc8wAB8CACBZMB8BAH07IB8EAOIfB/DAAl/7IAk1/6jv5f+oz8BZvsGJT7+vMaRgr7E0QHm8TxCwRD6kQEA5tP8H0LC/sCM0/q5AsD60MDy/ECC5tEBPAHBAcsGfgLMDPRpbnMB0y/Q/CAAwPwfwOKB0y/Q/AgAwPw3wNMB0y/Q/AIAwPw9wMKBxvVF+AXsUPwgAMB4APwfwMAmhKxQ/AgAwHgA/DfA77xAA8C0EPwCAMB4APw9wO88QAPAtBD8AIDNeAD8P0DMuClucwHTL9D8EADA/C/A4oHTL9D8BADA/DvA0wHTL9D8AQDA/D7AwoHG9UX4BexQ/BAAwHgA/C/AwCaErFD8BADAeAD8O8DvvEADwLQQ/AEAwHgA/D7A7zxAA8C0EPwAQMB4APw/gMENQgtCfgLMH/0da8BNljnATBG5wmwvejwj7ABAACiAQAAAUt7RBhgcEcWAAAAAUt7RBhgcEcGAAAAAAAAAAAAAAA=");
     return {
       update:E.nativeCall(1, "void(int,int,int,int)", bin),
-      setscrnbuf:E.nativeCall(225, "void(int)", bin),
-      setimgbuf:E.nativeCall(213, "void(int)", bin),
+      setscrnbuf:E.nativeCall(433, "void(int)", bin),
+      setimgbuf:E.nativeCall(421, "void(int)", bin),
     };
   })();
 
