@@ -13,13 +13,6 @@ var code = (function(){
 var LCD_WIDTH = 250;
 var LCD_HEIGHT = 122;
 
-screenbuf = new Uint8Array(Math.ceil(LCD_HEIGHT/12)*(LCD_WIDTH/2)*3); // cols*rows*3 - 24 pixel chunks
-var addrbuf = E.getAddressOf(screenbuf,true);
-if (!addrbuf) throw new Error("Not a Flat String"); 
-
-code.setscrnbuf(addrbuf);
-
-
 function init(spi, dc, ce, rst, callback) {
     function cmd(c,d) {
         dc.reset();
@@ -65,9 +58,16 @@ function init(spi, dc, ce, rst, callback) {
 }
 
 exports.connect = function(options) {
+    function getaddr(buf){
+        var a = E.getAddressOf(buf,true);
+        if (!a) throw new Error("ST7302 -buffer not a Flat String");
+        return a;
+    }
     command = init(options.spi, options.dc, options.ce, options.rst);
+    screenbuf = new Uint8Array(Math.ceil(LCD_HEIGHT/12)*(LCD_WIDTH/2)*3); // cols*rows*3 - 24 pixel chunks
+    code.setscrnbuf(getaddr(screenbuf)); 
     g = Graphics.createArrayBuffer(250,128,1,{vertical_byte:true,msb:false});
-    code.setimgbuf(E.getAddressOf(g.buffer,true));
+    code.setimgbuf(getaddr(g.buffer));
     g.flip = function() {
         a = g.getModified(true)
         if (a) {
