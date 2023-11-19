@@ -19,5 +19,5 @@ It now takes 127ms to render the example with `g.flip` taking 31ms.
 
 Unrolling the inner loop in update gives:
 
-121ms to render the example with `g.flip` taking 24 ms.
+118ms to render the example with `g.flip` taking 21 ms.
 
