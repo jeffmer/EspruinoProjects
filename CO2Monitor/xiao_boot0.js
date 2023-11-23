@@ -1,18 +1,21 @@
+D14.reset(); //enable battery voltage read
+D13.reset(); //high charging rate
 
-
-D25.reset(); D24.set(); //PCB Antenna
-SPI1.setup({sck:D26, mosi:D27, baud: 10000000}); 
+SPI1.setup({sck:D2, mosi:D3, baud: 10000000}); 
 
 var g = require("ST7302").connect({
   spi:SPI1,
-  dc:D34,
-  ce:D40,
-  rst:D33
+  dc:D29,
+  ce:D4,
+  rst:D28
 });
 
 global["\xff"].gfx = g;
 
 var STOR = require("Storage");
+
+var SENSI2C = new I2C();
+SENSI2C.setup({scl:D47,sda:D46,bitrate:200000});
 
 function timeit(fn){
   var start = getTime();
@@ -21,7 +24,7 @@ function timeit(fn){
 }
 
 function batV(){
-  return (analogRead(D5)*4.524);
+  return (analogRead(D31)*9.74);
 }
 
 E.getBattery = function (){
@@ -34,9 +37,9 @@ E.charging = false;
 
 setWatch(
     function(){
-      v = D12.read();
+      v = !D17.read();
       if (v!=E.charging){
         E.charging = v;
         E.emit("charging",v);
       }
-    },D12, {repeat:true,edge:"both"});
+    },D17, {repeat:true,edge:"both"});

@@ -6,10 +6,6 @@ var crc_code = (function(){
       gencrc:E.nativeCall(1, "int(int)", bin),
     };
   })();
-  
-
-var SENSI2C = new I2C();
-SENSI2C.setup({scl:D42,sda:D43,bitrate:200000});
 
 global.SCD41 = {
     delay_ms:function(d) {var t = getTime()+d/1000; while(getTime()<t);},
