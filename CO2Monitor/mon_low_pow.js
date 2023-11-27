@@ -14,7 +14,7 @@ eval(STOR.read("trend.js"));
 var W = g.getWidth();
 var H = g.getHeight();
 
-var CO2 = new Trend("CO2","ppm",400,1400);
+var CO2 = new Trend("CO2","ppm",0,2000);
 var Humd = new Trend("Humd","%",0,100);
 var Temp = new Trend("Temp","C",10,30);
 
@@ -55,11 +55,14 @@ function drawReading(x,y){
 
 var flash;
 
-function start_flash(){
+function start_flash(led1,led2){
   if (flash) return;
+  var phase = true;
   flash = setInterval(function() {
-    LED1.set();
-    setTimeout(()=>LED1.reset(),100);
+    phase=!phase;
+    led = phase?led1:led2;
+    led.set();
+    setTimeout(()=>led.reset(),100);
   }, 5000);
 }
 
@@ -71,10 +74,14 @@ function oneShot(){
   SCD41.oneShotMeas();
   setTimeout(function(){
     if(SCD41.dataready()) READING = SCD41.readMeas();
-    if (READING.co2>1100)
-      start_flash();
-    else
-      end_flash();
+    end_flash();
+    var co2 = READING.co2
+    if (co2>1000 && co2<1200 )
+      start_flash(LED2,LED2);
+    else if (co2>=1200 && co2 <1400)
+      start_flash(LED2,LED1);
+    else if (co2>1400)
+      start_flash(LED1,LED1);
   },5000);
 }
 

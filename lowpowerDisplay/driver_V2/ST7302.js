@@ -1,14 +1,26 @@
 // Low power display module - j.n.magee 2023
 // for source of native code see file c-codev3.c
 
-var code = (function(){
-    var bin=atob("LenwT4Ww2xABk2ZLe0SRRhtoApNkS3tEyhAeaACSDCdP8H0MSEUA87qAAiOQ+/P4ApsAnQNEAPABDgOTjvABDgGbnUIA86mA+iNrQwOa0VzqAJL79/MH+xMkxPELBE7qRARP6uQKDPsDgwPrQwPK8QIKBPAHBJpEBywW+AowAfABBBjRFLFD8IADAeAD8H8DjAdMv0PwIAMD8N8DTAdMv0PwCAMD8PcDDAdMv0PwAgMD8P0DF+AUsUPwQAMB4APwvwOMB0y/Q/AQAwPw7wNMB0y/Q/AEAwPw+wMMB0y/Q/ABAwPw/gMEMpL79/QH+xQiwvELAk7qQgIM+wSEBvgKMATrRAPUEMTxAgQC8AcCHEQHKjNdAfAQCwHwIAoB8EACHNG78QAPAtBD8IADAeAD8H8DuvEADwLQQ/AgAwHgA/DfAxKxQ/AIAwHgA/D3AwkGTL9D8AIDA/D9Axvgu/EADwLQQ/BAAwHgA/C/A7rxAA8C0EPwEAMB4APw7wMSsUPwBAMB4APw+wMKBky/Q/ABAwPw/gMzVQE1UucBMELnBbC96PCPuAEAAKoBAAABS3tEGGBwRxYAAAABS3tEGGBwRwYAAAAAAAAAAAAAAA==");
-    return {
-      update:E.nativeCall(1, "void(int,int,int,int)", bin),
-      setscrnbuf:E.nativeCall(441, "void(int)", bin),
-      setimgbuf:E.nativeCall(429, "void(int)", bin),
-    };
-  })();
+function getcode(rotated){
+    if (rotated)  {
+        return (function(){
+            var bin=atob("LenwT4ewwPH5CAOSMUoEk3pET/AMChJoApIvSnpET/AIC9L4AOADmpBCTdwCIpj78vIBkgDwAQKC8AECwfF5DA5GBZJP8AEJBJueQjjanPv69QWcCvsVwsLxCwJE6kICAZx9Jwf7BUUF60UEkvv79cXxAgUlRAKclvv79/ojA/sHRxNMNEAALLi/BPH/NAdEvL9k8AcEATQ/eAn6BPQnQgLwBwIe+AVACfoC8hS/IkMk6gICDvgFIAE2DPH/PMPnATAI8f84rucHsL3o8I8AvwcAAIDkAAAA1AAAAAFLe0QYYHBHFgAAAAFLe0QYYHBHBgAAAAAAAAAAAAAA");
+            return {
+              update:E.nativeCall(1, "int(int,int,int,int)", bin),
+              setscrnbuf:E.nativeCall(233, "void(int)", bin),
+              setimgbuf:E.nativeCall(221, "void(int)", bin),
+            };
+          })();
+    } 
+    return (function(){
+            var bin=atob("LenwT4Ww2xABk2ZLe0SRRhtoApNkS3tEyhAeaACSDCdP8H0MSEUA87qAAiOQ+/P4ApsAnQNEAPABDgOTjvABDgGbnUIA86mA+iNrQwOa0VzqAJL79/MH+xMkxPELBE7qRARP6uQKDPsDgwPrQwPK8QIKBPAHBJpEBywW+AowAfABBBjRFLFD8IADAeAD8H8DjAdMv0PwIAMD8N8DTAdMv0PwCAMD8PcDDAdMv0PwAgMD8P0DF+AUsUPwQAMB4APwvwOMB0y/Q/AQAwPw7wNMB0y/Q/AEAwPw+wMMB0y/Q/ABAwPw/gMEMpL79/QH+xQiwvELAk7qQgIM+wSEBvgKMATrRAPUEMTxAgQC8AcCHEQHKjNdAfAQCwHwIAoB8EACHNG78QAPAtBD8IADAeAD8H8DuvEADwLQQ/AgAwHgA/DfAxKxQ/AIAwHgA/D3AwkGTL9D8AIDA/D9Axvgu/EADwLQQ/BAAwHgA/C/A7rxAA8C0EPwEAMB4APw7wMSsUPwBAMB4APw+wMKBky/Q/ABAwPw/gMzVQE1UucBMELnBbC96PCPuAEAAKoBAAABS3tEGGBwRxYAAAABS3tEGGBwRwYAAAAAAAAAAAAAAA==");
+            return {
+                update:E.nativeCall(1, "void(int,int,int,int)", bin),
+                setscrnbuf:E.nativeCall(441, "void(int)", bin),
+                setimgbuf:E.nativeCall(429, "void(int)", bin),
+            };
+        })();
+}
 
 var LCD_WIDTH = 250;
 var LCD_HEIGHT = 122;
@@ -46,7 +58,7 @@ function init(spi, dc, ce, rst, callback) {
     cmd(0x3A,0x11); // Data Format Select
     cmd(0xB8,0x09); // Panel Setting
     cmd(0xD0,0x1F); // Unknown command??
-    cmd(0x20);      // Display Inversion Off
+    cmd(0x21);      // Display Inversion On
     cmd(0x29);      // Display on
     cmd(0xB9,0xE3);  // Clear RAM
     delay_ms(100);
@@ -64,14 +76,15 @@ exports.connect = function(options) {
         return a;
     }
     command = init(options.spi, options.dc, options.ce, options.rst);
+    var code = getcode(options.rotated);
     screenbuf = new Uint8Array(Math.ceil(LCD_HEIGHT/12)*(LCD_WIDTH/2)*3); // cols*rows*3 - 24 pixel chunks
     code.setscrnbuf(getaddr(screenbuf)); 
     g = Graphics.createArrayBuffer(250,128,1,{vertical_byte:true,msb:false});
     code.setimgbuf(getaddr(g.buffer));
     g.flip = function() {
-        a = g.getModified(true)
+        a = g.getModified(true);
         if (a) {
-            code.update(a.x1,a.y1,a.x2,a.y2)
+            code.update(a.x1,a.y1,a.x2,a.y2>121?121:a.y2);
             command(0x2A,[25,35]); 
             command(0x2B,[0,124]);
             command(0x2c,screenbuf);
