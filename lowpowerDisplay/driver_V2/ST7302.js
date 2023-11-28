@@ -4,7 +4,7 @@
 function getcode(rotated){
     if (rotated)  {
         return (function(){
-            var bin=atob("LenwT4ewwPH5CAOSMUoEk3pET/AMChJoApIvSnpET/AIC9L4AOADmpBCTdwCIpj78vIBkgDwAQKC8AECwfF5DA5GBZJP8AEJBJueQjjanPv69QWcCvsVwsLxCwJE6kICAZx9Jwf7BUUF60UEkvv79cXxAgUlRAKclvv79/ojA/sHRxNMNEAALLi/BPH/NAdEvL9k8AcEATQ/eAn6BPQnQgLwBwIe+AVACfoC8hS/IkMk6gICDvgFIAE2DPH/PMPnATAI8f84rucHsL3o8I8AvwcAAIDkAAAA1AAAAAFLe0QYYHBHFgAAAAFLe0QYYHBHBgAAAAAAAAAAAAAA");
+            var bin=atob("LenwT4ewwPH5DgOSMUoEk3pET/AMChJoApIvSnpET/AIC9L4AMADmpBCTdwCIp778vIBkg7wAQKC8AECwfF5CA5GBZJP8AEJBJueQjjamPv69QWcCvsVgsLxCwJE6kICAZx9Jwf7BUUF60UEkvv79cXxAgUlRAKclvv79/ojA/sHRxNMNEAALLi/BPH/NAdEvL9k8AcEATQ/eAn6BPQnQgLwBwIc+AVACfoC8hS/IkMk6gICDPgFIAE2CPH/OMPnATAO8f8+rucHsL3o8I8AvwcAAIDkAAAA1AAAAAFLe0QYYHBHFgAAAAFLe0QYYHBHBgAAAAAAAAAAAAAA");
             return {
               update:E.nativeCall(1, "int(int,int,int,int)", bin),
               setscrnbuf:E.nativeCall(233, "void(int)", bin),

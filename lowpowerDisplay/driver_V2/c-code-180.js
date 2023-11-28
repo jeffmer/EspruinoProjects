@@ -21,7 +21,7 @@ int update(int x1, int y1, int x2, int y2) {
         for (int y=y1; y<y2; y++) {
             int ry = 121-y;
             int col = ry/12;
-            int bit = (~(249-rx))&1 | (11 - ry%12)<<1;
+            int bit = (~rx)&1 | (11 - ry%12)<<1;
             int index = 3*(col*125 + row)+(2-(bit/8));
             unsigned char c = IMAGE[(y/8)*250+x] & (1<<y%8);
             if (c>0)
