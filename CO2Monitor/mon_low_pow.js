@@ -70,10 +70,20 @@ function end_flash(){
   if (flash) flash = clearInterval(flash);
 }
 
+function updateBT(r) {
+  var temp = Math.round(r.temp*10)
+  var data = new Uint8Array([r.co2>>8,r.co2, temp>>8,temp, Math.round(r.humid),E.getBattery()]);
+  NRF.setAdvertising({}, {
+    manufacturer: 0x590,
+    manufacturerData: data
+  });
+}
+
 function oneShot(){
   SCD41.oneShotMeas();
   setTimeout(function(){
     if(SCD41.dataready()) READING = SCD41.readMeas();
+    updateBT(READING);
     end_flash();
     var co2 = READING.co2
     if (co2>1000 && co2<1200 )
@@ -89,7 +99,7 @@ function record(){
   CO2.record(READING.co2);
   Humd.record(READING.humid);
   Temp.record(READING.temp);
-}
+} 
 
 function drawClock(x,y){
     var now=Date();
