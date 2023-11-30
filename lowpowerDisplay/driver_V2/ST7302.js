@@ -58,7 +58,7 @@ function init(spi, dc, ce, rst, callback) {
     cmd(0x3A,0x11); // Data Format Select
     cmd(0xB8,0x09); // Panel Setting
     cmd(0xD0,0x1F); // Unknown command??
-    cmd(0x21);      // Display Inversion On
+    cmd(0x20);      // Display Inversion Off
     cmd(0x29);      // Display on
     cmd(0xB9,0xE3);  // Clear RAM
     delay_ms(100);

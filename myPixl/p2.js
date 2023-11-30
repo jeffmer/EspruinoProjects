@@ -1,6 +1,9 @@
 D14.reset(); //enable battery voltage read
 D13.reset(); //high charging rate
 
+var STOR = require("Storage");
+var settings = STOR.readJSON("settings.json",1)||{invert:true, rotated:true};
+
 SPI1.setup({sck:D2, mosi:D3, baud: 10000000}); 
 
 var g = require("ST7302").connect({
@@ -8,12 +11,10 @@ var g = require("ST7302").connect({
   dc:D29,
   ce:D4,
   rst:D28,
-  rotated:true
+  rotated:settings.rotated,
 });
 g.theme= {fg:1,bg:0,fg2:1,bg2:0,fgH:0,bgH:1,dark:true};
-
-var STOR = require("Storage");
-
+g.invert(settings.invert);
 
 function timeit(fn){
   var start = getTime();
@@ -47,7 +48,7 @@ P2.appRect = { x: 10, y: 2, w: 240, h: 120, x2: 249, y2: 121 };
 
 setWatch( 
   function(e){
-    if ((e.time-e.lastTime)>1.5) load("launch.js");
+    if ((e.time-e.lastTime)>0.75) load("launch.js");
   },BTN1, {repeat:true,edge:"falling"});
 
 

@@ -12,4 +12,25 @@ const appsmenu = {
     }, appsmenu);     
   }
 
+  appsmenu["Settings>"] = ()=>showSettingsMenu();
+
+
+  function showSettingsMenu(){
+    const smenu = {
+      "" : { "title" : "Settings" },
+      'Invert Display': {
+        value: settings.invert,
+        format: () => (settings.invert ? 'Yes' : 'No'),
+        onchange: () => {settings.invert = !settings.invert;}
+      },
+      'Rotate Display': {
+        value: settings.rotated,
+        format: () => (settings.rotated ? 'Yes' : 'No'),
+        onchange: () => {settings.rotated = !settings.rotated;}
+      },
+      "Exit" : function() { STOR.writeJSON("settings.json",settings); E.showMenu(appsmenu);}
+    }
+    E.showMenu(smenu);
+  }
+
 E.showMenu(appsmenu);
