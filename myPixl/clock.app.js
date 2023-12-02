@@ -65,6 +65,21 @@ E.on("charging",function(v){
   g.flip();
 });
 
-
 drawClock();
-setInterval(drawClock,30000);
+var ticker = setInterval(drawClock,30000);
+
+global.SCREENACCESS = {
+  withApp:true,
+  request:function(){
+     if (ticker) ticker = clearInterval(ticker);
+     g.clear();
+  },
+  release:function(){
+    this.withApp=true;
+    drawClock();
+    ticker = setInterval(drawClock,30000);
+  }
+}
+
+eval(STOR.read("ancs.js"));
+startancs();

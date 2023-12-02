@@ -84,7 +84,7 @@ exports.connect = function(options) {
     g.flip = function() {
         a = g.getModified(true);
         if (a) {
-            code.update(a.x1,a.y1,a.x2,a.y2>121?121:a.y2);
+            code.update(a.x1,a.y1,a.x2,a.y2>120?121:a.y2+1);
             command(0x2A,[25,35]); 
             command(0x2B,[0,124]);
             command(0x2c,screenbuf);

@@ -32,8 +32,8 @@ P2.setUI = function(mode, cb) {
       ];
     } else if (mode=="leftright") {
       P2.btnWatches = [
-        setWatch(function() { cb(-1); }, BTN1, {repeat:1,edge:"falling"}),
-        setWatch(function() { cb(1); }, BTN3, {repeat:1,edge:"falling"}),
+        setWatch(function() { cb(-1); }, BTN3, {repeat:1,edge:"falling"}),
+        setWatch(function() { cb(1); }, BTN1, {repeat:1,edge:"falling"}),
         setWatch(function() { cb(); }, BTN2, {repeat:1,edge:"falling"})
       ];
     } else if (mode=="clock") {
