@@ -96,8 +96,8 @@ function startancs() {
     draw();
   }
   
-  //E.setConsole("USB", {force:true});
   if (ENABLED && typeof SCREENACCESS!='undefined') {
+    E.setConsole("USB", {force:true});
     console.log("Starting ANCS");
     E.on("ANCS", getnotify);
     NRF.on('connect',changed);

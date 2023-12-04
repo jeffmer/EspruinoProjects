@@ -51,6 +51,8 @@ setWatch(
     if ((e.time-e.lastTime)>0.75) load("launch.js");
   },BTN1, {repeat:true,edge:"falling"});
 
+require("Roboto15").add(Graphics)
+
 E.showMessage = function(msg,options) {
   if ("string" == typeof options)
     options = { title : options };
