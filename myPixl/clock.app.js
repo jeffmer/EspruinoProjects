@@ -10,14 +10,16 @@ function drawBat(v){
   g.fillRect(x+4,y+6,x+4+Math.ceil(v*(s-12)/100),y+17);
 }
 
-var connected = false;
-
 function drawBlue(){
   g.drawImage(atob("CxQBBgDgFgJgR4jZMawfAcA4D4NYybEYIwTAsBwDAA=="), 4, 100);
 }
 
 function drawCharging(){
   g.drawImage(atob("DhgBHOBzgc4HOP////////////////////3/4HgB4AeAHgB4AeAHgB4AeAHg"),W-62,2);
+}
+
+function drawANCS(){
+  g.drawImage(atob("GBgBAAAABAAADgAAHwAAPwAAf4AAP4AAP4AAP4AAHwAAH4AAD8AAB+AAA/AAAfgAAf3gAH/4AD/8AB/+AA/8AAf4AAHwAAAgAAAA"),W-30,H-30);
 }
     
 function drawClock(){
@@ -42,18 +44,19 @@ function drawClock(){
   drawBat(E.getBattery());
   if (E.charging) drawCharging();
   if (NRF.getSecurityStatus().connected) drawBlue();
+  if (NRF.ancsIsActive()) drawANCS();
   g.flip();
 }
 
 NRF.on("connect", function(a){
   drawBlue();
-  connected=true;
+  setTimeout(()=>{if (NRF.ancsIsActive()) {drawANCS();g.flip();}},1000);
   g.flip();
 });
   
 NRF.on("disconnect", function(a){
   g.clearRect(4,100,20,120);
-  connected=false;
+  g.clearRect(W-30,H-30,259,121);
   g.flip();
 });
 

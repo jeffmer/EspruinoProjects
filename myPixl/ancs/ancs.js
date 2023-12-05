@@ -1,6 +1,7 @@
 
 
 if (!E.showPrompt) eval(STOR.read("prompt.js"));
+if (!global.Blink) eval(STOR.read("blink.js"));
 
 function startancs() {
 
@@ -14,7 +15,10 @@ function startancs() {
   var screentimeout;
   var inalert = false;
   
+  var blink = new Blink(LED2,5000,100);
+
   function release_screen(){
+    blink.stop();
     screentimeout= setTimeout(() => { 
         SCREENACCESS.release(); 
         screentimeout = undefined; 
@@ -29,12 +33,11 @@ function startancs() {
   var replacer = ""; //(n)=>print('Unknown unicode '+n.toString(16));
 
   function displaymsg(m){
+    blink.start();
     //we may already be displaying a prompt, so clear it
     E.showPrompt();
     if (screentimeout) clearTimeout(screentimeout);
-    Bangle.setLCDPower(1);
     SCREENACCESS.request();
-    Bangle.buzz();
     var ttl = E.decodeUTF8(m.title, unicodeRemap, replacer);
     var msg = E.decodeUTF8(m.message, unicodeRemap, replacer);
     if (current.cat!=1){
@@ -80,35 +83,14 @@ function startancs() {
     });
   }
 
-  var stage = 0    
-  function draw(){
-    var img = E.toArrayBuffer(atob("GBgBAAAABAAADgAAHwAAPwAAf4AAP4AAP4AAP4AAHwAAH4AAD8AAB+AAA/AAAfgAAf3gAH/4AD/8AB/+AA/8AAf4AAHwAAAgAAAA"));
-    g.setColor((stage>1)?1:0).drawImage(img,g.getWidth()-30,g.getHeight()-30).flip();
-    g.setColor(1);
-  }
-
   E.showAlert = function(msg,title) {
     return E.showPrompt(msg,{title:title,buttons:{Ok:1}});
   }
   
-  function changed(){
-    stage = NRF.getSecurityStatus().connected ? 2 : 1;
-    draw();
-  }
-  
   if (ENABLED && typeof SCREENACCESS!='undefined') {
-    E.setConsole("USB", {force:true});
-    console.log("Starting ANCS");
     E.on("ANCS", getnotify);
-    NRF.on('connect',changed);
-    NRF.on('disconnect',changed);
-    NRF.setServices(undefined,{ancs:true});
-    stage = NRF.getSecurityStatus().connected ? 2 : 1;
+    NRF.setServices(undefined,{uart:true,ancs:true});
   }
   
 }
 
-/*
-WARNING: PM: PM_EVT_ERROR_UNEXPECTED 2
-WARNING: PM: PM_EVT_ERROR_UNEXPECTED 3
-*/

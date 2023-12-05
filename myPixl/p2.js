@@ -58,7 +58,7 @@ E.showMessage = function(msg,options) {
     options = { title : options };
   options = options||{};
   g.reset().clearRect(P2.appRect); // clear screen
-  g.setFont("6x8",(g.getWidth()>128)?2:1).setFontAlign(0,-1);
+  g.setFont("Roboto15",1).setFontAlign(0,-1);
   var Y = P2.appRect.y;
   var W = g.getWidth(), H = g.getHeight()-Y, FH=g.getFontHeight();
   var titleLines = g.wrapString(options.title, W-2);

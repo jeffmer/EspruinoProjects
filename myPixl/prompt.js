@@ -8,7 +8,7 @@ E.showPrompt = function(msg,options) {
     if (!options.selected)
       options.selected = 0;
     function draw() {
-      g.reset().setFont("6x8",1).setFontAlign(0,-1);
+      g.reset().setFont("6x15",1).setFontAlign(0,-1);
       var Y = P2.appRect.y;
       var W = g.getWidth(), H = g.getHeight()-Y, FH=g.getFontHeight();
       var titleLines = g.wrapString(options.title, W-2);
@@ -21,7 +21,7 @@ E.showPrompt = function(msg,options) {
       }
       if (titleLines)
         g.setColor(g.theme.fgH).setBgColor(g.theme.bgH).
-          clearRect(0,Y,W-1,Y+4+titleLines.length*FH).
+          clearRect(0,Y,W-1,Y+titleLines.length*FH).
           drawString(titleLines.join("\n"),W/2,Y+2);
       g.setColor(g.theme.fg).setBgColor(g.theme.bg).
         drawString(msgLines.join("\n"),W/2,y);
