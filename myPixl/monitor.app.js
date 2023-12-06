@@ -6,7 +6,7 @@ function drawReading(x,y,n,d){
     temp= d.getInt16(2,false)/10;
     humid = d.getUint8(4);
     bat  = d.getUint8(5);
-    g.setFontAlign(-1,-1).setFont("Roboto15",1);
+    g.setFontAlign(-1,-1).setFont("8x16",1);
     g.drawString(n,x,y);
     g.drawString("CO2 : "+co2+"ppm",x,y+16);
     g.drawString("Temp: "+temp.toFixed(1)+"C",x,y+32);

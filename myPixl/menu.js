@@ -37,7 +37,7 @@ E.showMenu = function(items) {
       if (idx!=l.lastIdx) rowmin=undefined; // redraw all if we scrolled
       l.lastIdx = idx;      
       var iy = y;
-      g.reset().setFont('Roboto15',1).setFontAlign(0,-1,0);
+      g.reset().setFont('8x16',1).setFontAlign(0,-1,0);
       if (rowmin===undefined && options.title) {
         g.drawString(options.title,(x+x2)/2,y-options.fontHeight-2);
         g.drawLine(x,y-2,x2,y-2);

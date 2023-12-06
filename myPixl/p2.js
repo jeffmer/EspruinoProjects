@@ -51,14 +51,14 @@ setWatch(
     if ((e.time-e.lastTime)>0.75) load("launch.js");
   },BTN1, {repeat:true,edge:"falling"});
 
-require("Roboto15").add(Graphics)
+require("Font8x16").add(Graphics);
 
 E.showMessage = function(msg,options) {
   if ("string" == typeof options)
     options = { title : options };
   options = options||{};
   g.reset().clearRect(P2.appRect); // clear screen
-  g.setFont("Roboto15",1).setFontAlign(0,-1);
+  g.setFont("8x16",1).setFontAlign(0,-1);
   var Y = P2.appRect.y;
   var W = g.getWidth(), H = g.getHeight()-Y, FH=g.getFontHeight();
   var titleLines = g.wrapString(options.title, W-2);
