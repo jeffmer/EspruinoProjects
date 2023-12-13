@@ -22,12 +22,12 @@ info = {
  'default_console' : "EV_BLUETOOTH",
  'variables' : 12500, # How many variables are allocated for Espruino to use. RAM will be overflowed if this number is too high and code won't compile.
  'bootloader' : 1,
- 'binary_name' : 'espruino_%v_xiao.hex',
+ 'binary_name' : 'espruino_%v_xiao_nousb.hex',
  'build' : {
    'optimizeflags' : '-Os',
    'libraries' : [
      'BLUETOOTH',
-#     'TERMINAL',
+ #    'TERMINAL',
      'GRAPHICS',
      'CRYPTO','SHA256','SHA512',
      'JIT' # JIT compiler enabled
@@ -35,27 +35,28 @@ info = {
    'makefile' : [
      'DEFINES += -DCONFIG_GPIO_AS_PINRESET', # Allow the reset pin to work
      'DEFINES += -DCONFIG_NFCT_PINS_AS_GPIOS', # Allow us to use NFC pins as GPIO
-     'DEFINES += -DNRF_USB=1 -DUSB',
-     'DEFINES += -DESPR_BLUETOOTH_ANCS=1',
+#     'DEFINES += -DNRF_USB=1 -DUSB',
      'DEFINES += -DESPR_LSE_ENABLE', # Ensure low speed external osc enabled
      'DEFINES += -DNRF_SDH_BLE_GATT_MAX_MTU_SIZE=131', # 23+x*27 rule as per https://devzone.nordicsemi.com/f/nordic-q-a/44825/ios-mtu-size-why-only-185-bytes
      'DEFINES += -DCENTRAL_LINK_COUNT=2 -DNRF_SDH_BLE_CENTRAL_LINK_COUNT=2', # allow two outgoing connections at once
      'LDFLAGS += -Xlinker --defsym=LD_APP_RAM_BASE=0x3660', # set RAM base to match MTU=131 + CENTRAL_LINK_COUNT=2
      'DEFINES += -DESPR_DCDC_ENABLE=1', # Use DC/DC converter
      'ESPR_BLUETOOTH_ANCS=1', # Enable ANCS (Apple notifications) support
-#    'DEFINES += -DSPIFLASH_SLEEP_CMD', # SPI flash needs to be explicitly slept and woken up
+     'DEFINES += -DSPIFLASH_SLEEP_CMD', # SPI flash needs to be explicitly slept and woken up
 #    'DEFINES += -DSPIFLASH_READ2X', # Read SPI flash at 2x speed using MISO and MOSI for IO
      'DEFINES += -DESPR_JSVAR_FLASH_BUFFER_SIZE=32', # The buffer size we use when executing/iterating over data in flash memory (default 16). Should be set based on benchmarks.
      'DEFINES+=-DUSE_FONT_6X8 -DGRAPHICS_PALETTED_IMAGES -DGRAPHICS_ANTIALIAS',
-     'DEFINES+=-DBLE_HIDS_ENABLED=1 -DBLUETOOTH_NAME_PREFIX=\'"XIAO"\'',
+     'DEFINES+=-DBLUETOOTH_NAME_PREFIX=\'"XIAO"\'',
      'DEFINES+=-DLCD_HEIGHT=122 -DLCD_WIDTH=250',
      'DEFINES+=-DDUMP_IGNORE_VARIABLES=\'"g\\0"\'',
      'DEFINES+=-DNO_DUMP_HARDWARE_INITIALISATION', # don't dump hardware init - not used and saves 1k of flash
      'DEFINES += -DESPR_NO_LINE_NUMBERS=1', # we execute mainly from flash, so line numbers can be worked out
+     'WRAPPERSOURCES += libs/graphics/jswrap_font_6x15.c',
+     'WRAPPERSOURCES += libs/graphics/jswrap_font_12x20.c',
      'DFU_PRIVATE_KEY=targets/nrf5x_dfu/dfu_private_key.pem',
      'DFU_SETTINGS=--application-version 0xff --hw-version 52 --sd-req 0xa9', #S140 6.0.0
      'BOOTLOADER_SETTINGS_FAMILY=NRF52840',
-     'DEFINES += -DNRF_BL_DFU_INSECURE=1',
+#     'DEFINES += -DNRF_BL_DFU_INSECURE=1',
      'NRF_SDK15=1'
    ]
  }
