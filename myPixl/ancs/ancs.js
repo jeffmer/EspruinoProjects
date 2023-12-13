@@ -15,7 +15,7 @@ function startancs() {
   var screentimeout;
   var inalert = false;
   
-  var blink = new Blink(LED2,5000,100);
+  var blink = new Blink(LED2,LED2,LED2,5000,100);
 
   function release_screen(){
     blink.stop();
