@@ -1,6 +1,12 @@
 eval(STOR.read("menu.js"));
 
 var apps = STOR.list(/\.app.js$/).map(app=>{return app.split('.')[0];});
+
+apps.sort((a,b)=>{
+  if (a<b) return -1;
+  if (a>b) return 1;
+  return 0;
+});
                                       
 const appsmenu = {
 '': { 'title': 'Programs' }

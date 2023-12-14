@@ -21,6 +21,10 @@ function drawCharging(){
 function drawANCS(){
   g.drawImage(atob("GBgBAAAABAAADgAAHwAAPwAAf4AAP4AAP4AAP4AAHwAAH4AAD8AAB+AAA/AAAfgAAf3gAH/4AD/8AB/+AA/8AAf4AAHwAAAgAAAA"),W-30,H-30);
 }
+
+function drawAlarm(){
+    g.drawImage(atob("GBgBAAAAAAAAABgADhhwDDwwGP8YGf+YMf+MM//MM//MA//AA//AA//AA//AA//AA//AB//gD//wD//wAAAAADwAABgAAAAAAAAA"),W-30,48);
+}
     
 function drawClock(){
   var now=Date();
@@ -45,6 +49,7 @@ function drawClock(){
   if (E.charging) drawCharging();
   if (NRF.getSecurityStatus().connected) drawBlue();
   if (NRF.ancsIsActive()) drawANCS();
+  if (P2.alarmset) drawAlarm();
   g.flip();
 }
 

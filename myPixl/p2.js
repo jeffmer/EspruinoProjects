@@ -53,6 +53,17 @@ setWatch(
 
 require("Font8x16").add(Graphics);
 
+P2.buzz = function(d){
+  LED1.set();
+  setTimeout(()=>LED1.reset(),d);
+}
+
+var alarms = require('Storage').readJSON('alarm.json',1)||[];
+alarms = alarms.filter(alarm=>alarm.on);
+P2.alarmset = (alarms.length>0);
+
+if (STOR.read("alarm.boot.js")) eval(STOR.read("alarm.boot.js"));
+
 E.showMessage = function(msg,options) {
   if ("string" == typeof options)
     options = { title : options };
