@@ -1,13 +1,13 @@
 class Blink {
-    constructor(led1,led2,led3,period,ontime){
-        this.leds =[led1,led2,led3];
+    constructor(leds,period,ontime){
+        this.leds =leds;
         this.lno = 0;
         this.period = period;
         this.ontime = ontime;
     }  
     flash(){
       led = this.leds[this.lno];
-      this.lno = (this.lno+1)%3;
+      this.lno = (this.lno+1)%this.leds.length;
       led.set();
       setTimeout(()=>led.reset(),this.ontime);
     } 
