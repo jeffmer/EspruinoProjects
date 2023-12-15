@@ -87,3 +87,20 @@ E.showMessage = function(msg,options) {
       drawString(titleLines.join("\n"),W/2,Y+2);
   g.flip(); // force immediate show of message
 }
+
+function ctsUpdate(e){
+  var tz = 0;
+  if (e.timezone!==undefined) {
+    E.setTimeZone(e.timezone);
+    tz = e.timezone*3600;
+    var settings = STOR.readJSON('settings.json',1)||{};
+    settings.timezone = e.timezone;
+    STOR.writeJSON('settings.json',settings);
+  }
+  setTime((e.date.getTime()/1000) - tz);
+}
+
+function ctsSyncTime(){
+  if (NRF.ctsIsActive())
+    NRF.ctsGetTime().then(ctsUpdate);
+}

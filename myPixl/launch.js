@@ -1,4 +1,5 @@
 eval(STOR.read("menu.js"));
+if (!E.showAlert) eval(STOR.read("prompt.js"));
 
 var apps = STOR.list(/\.app.js$/).map(app=>{return app.split('.')[0];});
 
@@ -34,6 +35,12 @@ const appsmenu = {
         format: () => (settings.rotated ? 'Yes' : 'No'),
         onchange: () => {settings.rotated = !settings.rotated;}
       },
+      'Sync Time':function() {E.showAlert("Sync Time with phone?","Time Sync",).then(
+          function(){
+            ctsSyncTime();
+            setTimeout(()=>load("clock.app.js",1000));
+          }
+      )},
       "Exit" : function() { STOR.writeJSON("settings.json",settings); E.showMenu(appsmenu);}
     }
     E.showMenu(smenu);

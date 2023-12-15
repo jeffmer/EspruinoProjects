@@ -38,6 +38,10 @@ function scanForDevices() {
       g.flip();
     }, 2000); // scan for 1 sec
   }
+
+setWatch(function (){
+  load("clock.app.js");
+},BTN1,{edge:"rising",repeat:true});
   
 scanForDevices();
 setInterval(scanForDevices,120000);

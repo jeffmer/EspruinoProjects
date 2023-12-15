@@ -82,14 +82,10 @@ function startancs() {
       E.showMessage("ANCS: "+e,"ERROR");
     });
   }
-
-  E.showAlert = function(msg,title) {
-    return E.showPrompt(msg,{title:title,buttons:{Ok:1}});
-  }
   
   if (ENABLED && typeof SCREENACCESS!='undefined') {
     E.on("ANCS", getnotify);
-    NRF.setServices(undefined,{uart:true,ancs:true});
+    NRF.setServices(undefined,{uart:true,ancs:true,cts:true});
   }
   
 }
