@@ -23,7 +23,7 @@ function showAlarm(alarm) {
     title:"ALARM!",
     buttons : {"Sleep":true,"Ok":false} // default is sleep so it'll come back in 10 mins
   }).then(function(sleep) {
-    P2.blinker.stop()
+    P2.alarmStop();
     if (sleep) {
       if(alarm.ohr===undefined) alarm.ohr = alarm.hr;
       alarm.hr += 10/60; // 10 minutes
@@ -39,9 +39,9 @@ function showAlarm(alarm) {
     load("clock.app.js");
   });
   function buzz() {
-    P2.blinker.start();
+    P2.alarmStart();
     setTimeout(()=>{
-        P2.blinker.stop();
+        P2.alarmStop();
         if(alarm.as) { // auto-snooze
             setTimeout(buzz, 600000);
         }

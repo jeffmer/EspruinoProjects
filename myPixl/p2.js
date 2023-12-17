@@ -16,6 +16,8 @@ var g = require("ST7302").connect({
 g.theme= {fg:1,bg:0,fg2:1,bg2:0,fgH:0,bgH:1,dark:true};
 g.invert(settings.invert);
 
+global["\xff"].gfx = g;
+
 function timeit(fn){
   var start = getTime();
   fn();
@@ -54,7 +56,22 @@ setWatch(
 require("Font8x16").add(Graphics);
 
 eval(STOR.read("blink.js"));
-P2.blinker = new Blink([LED1,LED3],1000,900);
+P2.blinker = new Blink([LED1,LED3],1000,200);
+eval(STOR.read("tune.js"));
+P2.sound = new Tune(D5,"abcdefgABCDEFG  ",200);
+
+P2.alarmStart = function(secs){
+  if (!secs) secs=10;
+  P2.blinker.start();
+  P2.sound.play();
+  P2.soundTO = setTimeout(()=>{P2.sound.stop()},secs*1000);
+}
+
+P2.alarmStop = function(){
+  P2.blinker.stop();
+  P2.sound.stop();
+  if (P2.soundTO) P2.soundTO = clearTimeout(P2.soundTO);
+}
 
 var alarms = require('Storage').readJSON('alarm.json',1)||[];
 alarms = alarms.filter(alarm=>alarm.on);

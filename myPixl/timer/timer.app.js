@@ -1,4 +1,5 @@
-require("Font5x9Numeric7Seg").add(Graphics);
+require("Font5x9Numeric7Seg").add(Graphics)
+
 
 var s = STOR.readJSON("timer.json",1)||{mins:0, secs:10};
 
@@ -18,7 +19,7 @@ function countDown() {
   draw();
   if (counter <= 0 && ticker) {
     ticker = clearInterval(ticker);
-    P2.blinker.start();
+    P2.alarmStart(10);
   }
 }
 
@@ -26,7 +27,7 @@ var ticker = undefined;
 
 function initialise(){
   if (ticker) ticker = clearInterval(ticker);
-  P2.blinker.stop();
+  P2.alarmStop();
   counter = s.mins*60 + s.secs;
   draw();
 }
