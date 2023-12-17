@@ -35,12 +35,16 @@ const appsmenu = {
         format: () => (settings.rotated ? 'Yes' : 'No'),
         onchange: () => {settings.rotated = !settings.rotated;}
       },
-      'Sync Time':function() {E.showAlert("Sync Time with phone?","Time Sync",).then(
-          function(){
-            ctsSyncTime();
-            setTimeout(()=>load("clock.app.js",1000));
-          }
-      )},
+      'Sync Time':function() {
+          if (NRF.ctsIsActive()) {
+            E.showMessage("Syncing time with iPhone",{title:"settings"});
+            NRF.ctsGetTime().then(function(e){
+              ctsUpdate(e);
+              load("clock.app.js");
+            });
+          } else  
+          E.showMessage("CTS SErvice not Active",{title:"settings"});
+      },
       "Exit" : function() { STOR.writeJSON("settings.json",settings); E.showMenu(appsmenu);}
     }
     E.showMenu(smenu);

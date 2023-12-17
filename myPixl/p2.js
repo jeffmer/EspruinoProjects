@@ -53,10 +53,8 @@ setWatch(
 
 require("Font8x16").add(Graphics);
 
-P2.buzz = function(d){
-  LED1.set();
-  setTimeout(()=>LED1.reset(),d);
-}
+eval(STOR.read("blink.js"));
+P2.blinker = new Blink([LED1,LED3],1000,900);
 
 var alarms = require('Storage').readJSON('alarm.json',1)||[];
 alarms = alarms.filter(alarm=>alarm.on);
@@ -98,9 +96,4 @@ function ctsUpdate(e){
     STOR.writeJSON('settings.json',settings);
   }
   setTime((e.date.getTime()/1000) - tz);
-}
-
-function ctsSyncTime(){
-  if (NRF.ctsIsActive())
-    NRF.ctsGetTime().then(ctsUpdate);
 }

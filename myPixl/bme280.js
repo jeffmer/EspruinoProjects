@@ -109,7 +109,6 @@ var BME280 = {
         this.config_reg = (t_sb << 5) | (filter << 2) | spi3w_en;
         this.ctrl_hum_reg = osrs_h;
         this.ctrl_meas_reg = (osrs_t << 5) | (osrs_p << 2) | mode;
-        console.log("id: ",this.read(0xD0,1)[0]);
         this.write(0xF2, this.ctrl_hum_reg);
         this.write(0xF4, this.ctrl_meas_reg);
         this.write(0xF5, this.config_reg);
@@ -132,6 +131,6 @@ function coeff(){
 BME280.init()
 
 function doit(){
-  console.log(BME280.getData());
+  console.log(BME280.getData()); 
 }
 */

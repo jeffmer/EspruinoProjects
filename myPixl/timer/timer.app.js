@@ -2,9 +2,6 @@ require("Font5x9Numeric7Seg").add(Graphics);
 
 var s = STOR.readJSON("timer.json",1)||{mins:0, secs:10};
 
-if (!global.Blink) eval(STOR.read("blink.js"));
-blinker = new Blink([LED1,LED2],1000,900);
-
 var counter = s.mins*60 + s.secs;
 
 function draw() {
@@ -21,7 +18,7 @@ function countDown() {
   draw();
   if (counter <= 0 && ticker) {
     ticker = clearInterval(ticker);
-    blinker.start();
+    P2.blinker.start();
   }
 }
 
@@ -29,7 +26,7 @@ var ticker = undefined;
 
 function initialise(){
   if (ticker) ticker = clearInterval(ticker);
-  blinker.stop();
+  P2.blinker.stop();
   counter = s.mins*60 + s.secs;
   draw();
 }

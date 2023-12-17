@@ -17,14 +17,13 @@ if (!E.showPrompt) eval(STOR.read("prompt.js"));
 
 function showAlarm(alarm) {
   var msg = formatTime(alarm.hr);
-  var buzzCount = 10;
   if (alarm.msg)
     msg += "\n"+alarm.msg;
   E.showPrompt(msg,{
     title:"ALARM!",
     buttons : {"Sleep":true,"Ok":false} // default is sleep so it'll come back in 10 mins
   }).then(function(sleep) {
-    buzzCount = 0;
+    P2.blinker.stop()
     if (sleep) {
       if(alarm.ohr===undefined) alarm.ohr = alarm.hr;
       alarm.hr += 10/60; // 10 minutes
@@ -40,16 +39,13 @@ function showAlarm(alarm) {
     load("clock.app.js");
   });
   function buzz() {
-    P2.buzz(500);
-      setTimeout(()=>{
-        P2.buzz(500);
-        if (buzzCount--)
-            setTimeout(buzz, 2000);
-        else if(alarm.as) { // auto-snooze
-            buzzCount = 10;
+    P2.blinker.start();
+    setTimeout(()=>{
+        P2.blinker.stop();
+        if(alarm.as) { // auto-snooze
             setTimeout(buzz, 600000);
         }
-      },500);
+      },30000);
   }
   buzz();
 }
