@@ -101,6 +101,7 @@ E.showMessage = function(msg,options) {
       clearRect(0,Y,W-1,Y+4+titleLines.length*FH).
       drawString(titleLines.join("\n"),W/2,Y+2);
   g.flip(); // force immediate show of message
+  g.setColor(g.theme.fg).setBgColor(g.theme.bg);
 }
 
 function ctsUpdate(e){

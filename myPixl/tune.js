@@ -23,6 +23,11 @@ class Tune {
         else analogWrite(this.pin, 0.5, { freq: f } );
     }
 
+    beep(f,d){
+        this.freq(f);
+        setTimeout(this.freq.bind(this,0),d);
+    }
+
     play(){
         step = 0;
         this.ticker = setInterval(function(){

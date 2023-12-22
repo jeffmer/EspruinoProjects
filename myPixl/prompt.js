@@ -8,7 +8,7 @@ E.showPrompt = function(msg,options) {
     if (!options.selected)
       options.selected = 0;
     function draw() {
-      g.reset().setFont("6x15",1).setFontAlign(0,-1);
+      g.reset().setFont("8x16",1).setFontAlign(0,-1);
       var Y = P2.appRect.y;
       var W = g.getWidth(), H = g.getHeight()-Y, FH=g.getFontHeight();
       var titleLines = g.wrapString(options.title, W-2);

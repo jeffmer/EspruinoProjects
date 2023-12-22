@@ -17,12 +17,16 @@ class Trend {
         STOR.writeJSON(this.title+".json",this);
     }
 
-    restore(){
-        saved = STOR.readJSON(this.title+".json");
+    restore(saved){
+        if (!saved) saved = STOR.readJSON(this.title+".json");
         if (saved){
+            if (!this.title) this.title = saved.title;
             this.values = new Uint16Array(saved.values);
             this.next = saved.next;
             this.dim = saved.dim;
+            if(!this.units) this.units = saved.units;
+            if(!this.minv) this.minv = saved.minv;
+            if(!this.maxv) this.maxv = saved.maxv;
             saved=null;
         } else {
             this.values = new Uint16Array(144);
