@@ -27,9 +27,42 @@ function startancs() {
     }, 500);
   } 
 
-  var unicodeRemap = {
-    '2019':"'"
+var unicodeRemap = {
+    '2019':"'",
+    '260':"A",
+    '261':"a",
+    '262':"C",
+    '263':"c",
+    '268':"C",
+    '269':"c",
+    '270':"D",
+    '271':"d",
+    '280':"E",
+    '281':"e",
+    '282':"E",
+    '283':"e",
+    '321':"L",
+    '322':"l",
+    '323':"N",
+    '324':"n",
+    '327':"N",
+    '328':"n",
+    '344':"R",
+    '345':"r",
+    '346':"S",
+    '347':"s",
+    '352':"S",
+    '353':"s",
+    '356':"T",
+    '357':"t",
+    '377':"Z",
+    '378':"z",
+    '379':"Z",
+    '380':"z",
+    '381':"Z",
+    '382':"z",
   };
+
   var replacer = ""; //(n)=>print('Unknown unicode '+n.toString(16));
 
   function displaymsg(m){
@@ -51,7 +84,9 @@ function startancs() {
         release_screen();
       });
     }
-  }  function draw(){
+  }  
+  
+  function draw(){
     var img = E.toArrayBuffer(atob("GBgBAAAABAAADgAAHwAAPwAAf4AAP4AAP4AAP4AAHwAAH4AAD8AAB+AAA/AAAfgAAf3gAH/4AD/8AB/+AA/8AAf4AAHwAAAgAAAA"));
     if (stage>1) g.drawImage(img,g.getWidth()-40,g.getHeigth()-24);
   }
