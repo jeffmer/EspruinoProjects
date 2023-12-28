@@ -91,7 +91,7 @@ global.SCREENACCESS = {
 
 setWatch(function (){
   load("launch.js");
-},BTN1,{edge:"rising",repeat:true});
+},BTN1,{edge:"falling",repeat:true});
  
 
 eval(STOR.read("ancs.js"));

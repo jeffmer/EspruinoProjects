@@ -35,13 +35,13 @@ function initialise(){
 setWatch(function (){
     initialise();
     ticker = setInterval(countDown,1000);
-},BTN3,{edge:"rising",repeat:true});
+},BTN3,{edge:"falling",repeat:true});
 
-setWatch(initialise,BTN2,{edge:"rising",repeat:true});
+setWatch(initialise,BTN2,{edge:"falling",repeat:true});
 
 setWatch(function (){
   load("clock.app.js");
-},BTN1,{edge:"rising",repeat:true});
+},BTN1,{edge:"falling",repeat:true});
 
 g.setFont("8x16");
 g.setFontAlign(-1,-1).drawString("Start",10,104);

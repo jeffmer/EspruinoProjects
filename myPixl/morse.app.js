@@ -121,9 +121,9 @@ function gotch(){
   display();
 }
             
-setWatch(()=>add("."),BTN3,{edge:"rising",repeat:true});
-setWatch(()=>add("-"),BTN1,{edge:"rising",repeat:true});
-setWatch(()=>gotch(),BTN2,{edge:"rising",repeat:true});
+setWatch(()=>add("."),BTN3,{edge:"falling",repeat:true});
+setWatch(()=>add("-"),BTN1,{edge:"falling",repeat:true});
+setWatch(()=>gotch(),BTN2,{edge:"falling",repeat:true});
 display(code);
 
 

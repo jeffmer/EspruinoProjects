@@ -51,10 +51,7 @@ function startancs() {
         release_screen();
       });
     }
-  }  function draw(){
-    var img = E.toArrayBuffer(atob("GBgBAAAABAAADgAAHwAAPwAAf4AAP4AAP4AAP4AAHwAAH4AAD8AAB+AAA/AAAfgAAf3gAH/4AD/8AB/+AA/8AAf4AAHwAAAgAAAA"));
-    if (stage>1) g.drawImage(img,g.getWidth()-40,g.getHeigth()-24);
-  }
+  }  
 
   var notifyTO;
   function getnotify(d){
@@ -83,9 +80,11 @@ function startancs() {
     });
   }
   
+
+  if (!NRF.ancsIsActive()) NRF.disconnect(); // disconnect as it may be stuck in uart only service
   if (ENABLED && typeof SCREENACCESS!='undefined') {
     E.on("ANCS", getnotify);
-    NRF.setServices(undefined,{uart:true,ancs:true,cts:true});
+    NRF.setServices(undefined,{ancs:true,cts:true});
   }
   
 }

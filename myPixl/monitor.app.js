@@ -90,19 +90,19 @@ function getHistory(devname,itemname){
 setWatch(function (){
   selected = (selected+1) % 2;
   drawAll();
-},BTN3,{edge:"rising",repeat:true});
+},BTN3,{edge:"falling",repeat:true});
 
 setWatch(function (){
   if (DEVS[selected]) {
     getHistory(DEVS[selected].name,items[selitem]);
     E.showMessage("Connecting to:\n"+DEVS[selected].name,{title:"Monitor"});
   }
-},BTN2,{edge:"rising",repeat:true});
+},BTN2,{edge:"falling",repeat:true});
 
 setWatch(function (){
   selitem = (selitem+1) % 3;
   drawAll();
-},BTN1,{edge:"rising",repeat:true});
+},BTN1,{edge:"falling",repeat:true});
   
 scanForDevices();
 setInterval(scanForDevices,120000);
