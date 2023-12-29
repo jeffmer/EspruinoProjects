@@ -1,15 +1,18 @@
 /* record and display monitored variable trend
 * record every 10  minutes and store for 24 hours
+* or every hour for 6 days
 */
 
 
 class Trend {
 
-    constructor(title,units,minv,maxv){
+    constructor(title,units,minv,maxv,dim){
         this.title =title;
         this.units = units;
         this.minv = minv;
         this.maxv = maxv;
+        this.dim = dim;
+        this.days= false;
         this.restore();
     }
 
@@ -24,14 +27,15 @@ class Trend {
             this.values = new Uint16Array(saved.values);
             this.next = saved.next;
             this.dim = saved.dim;
+            if(saved.days) this.days = saved.days;
             if(!this.units) this.units = saved.units;
             if(!this.minv) this.minv = saved.minv;
             if(!this.maxv) this.maxv = saved.maxv;
             saved=null;
         } else {
-            this.values = new Uint16Array(144);
+            if(!this.dim) this.dim = this.dimension();
+            this.values = new Uint16Array(144);        
             this.next = 0;
-            this.dim = this.dimension();
         }
     }
     
@@ -65,11 +69,18 @@ class Trend {
         var start = this.next;
         g.clearRect(0,0,W-1,H-1);
         g.setFont("Vector",18);
-        g.setFontAlign(-11,-1).drawString(this.title,4,8);
+        g.setFontAlign(-1,-1).drawString(this.title.substr(0,5),4,8);
         g.setFont("Vector",14).drawString("("+this.units+")",4,28);
+        g.setFont("Vector",12).drawString(this.days?"days":"hours",4,104);
         // x-axis
         g.setFontAlign(0,-1).setFont("4x6",1);
         g.drawLine(XOFF,110,XOFF+144,110);
+        if (this.days)
+        for(var i=0;i<=6;i++){
+            var x = XOFF+i*24;
+            g.drawLine(x,YOFF+1,x,YOFF+3);
+            g.drawString(""+(6-i),x,114);
+        } else
         for(var i=0;i<=24;i+=2){
             var x = XOFF+i*6;
             g.drawLine(x,YOFF+1,x,YOFF+3);
