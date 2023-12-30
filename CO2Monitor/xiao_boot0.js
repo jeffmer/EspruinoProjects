@@ -28,9 +28,12 @@ function batV(){
 }
 
 E.getBattery = function (){
-    var bv = batV();
-    bp = bv<3.248088 ? 0 :  Math.ceil((bv-3.120712)*100);
-    return bp<=100 ? bp : 100;
+    var v = batV();
+    var pc = 0;
+    if (v>=3.95) pc = 80 + (v-3.95)*20/(4.2-3.95); // 80%+
+    else if (v>=3.7) pc = 10 + (v-3.7)*70/(3.95-3.7); // 10%+ is linear
+    else pc = (v-3.3)*10/(3.7-3.3); // 0%+
+    return Math.ceil(pc);
 };
 
 E.charging = false;
