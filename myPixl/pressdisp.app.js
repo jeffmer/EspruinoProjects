@@ -17,7 +17,7 @@ function drawReading(x,y,n,sel){
   highlight(sel==3,"PressD(hPa)",x,y+64);
 }
 
-var DEVS = ["Puck.js 6bfc"];
+var DEVS = ["XIAO dc58"];
 var selected = 0;
 var selitem = 0;
 var items =['Press', 'Temp', 'Humd', 'PressD'];
