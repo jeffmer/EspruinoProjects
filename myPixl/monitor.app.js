@@ -2,6 +2,12 @@ eval(STOR.read("trend.js"));
 
 var W = g.getWidth();
 var H = g.getHeight();
+var DEVS = [];
+var selected = 0;
+var selitem = 0;
+var items =['CO2', 'Temp', 'Humd', 'PressD'];
+var NITEMS = 3;
+
 
 function highlight(v,s,x,y){
     function setc(v){
@@ -13,14 +19,22 @@ function highlight(v,s,x,y){
 }
 
 function drawReading(x,y,d,sel){
-  co2 = d.getInt16(0,false);
-  temp= d.getInt16(2,false)/10;
-  humid = d.getUint8(4);
-  bat  = d.getUint8(5);
+  var co2 = d.getInt16(0,false);
+  var temp= d.getInt16(2,false)/10;
+  var humid = d.getUint8(4);
+  var bat  = d.getUint8(5);
+  if (d.byteLength>6) {
+    NITEMS=4;
+    press = d.getInt16(6,false);
+  } else {
+    NITEMS=3;
+    if (selitem>=NITEMS) selitem = NITEMS-1;
+  }
   highlight(sel==0,"CO2 : "+co2+"ppm",x,y);
   highlight(sel==1,"Temp: "+temp.toFixed(1)+"C",x,y+16);
   highlight(sel==2,"Humd: "+humid+"%",x,y+32);
-  g.drawString("Bat: "+bat+"%",x,y+48);
+  if (d.byteLength>6) highlight(sel==3,"Press: "+press+"hPa",x,y+48);
+  g.drawString("Bat: "+bat+"%",x,y+(d.byteLength>6?64:48));
 }
 
 function showStatus(s){
@@ -28,11 +42,6 @@ function showStatus(s){
   g.fillRect(125,30,126,110);
   g.setFont("6x8",1).setFontAlign(0,-1).drawString(s,125,110,true).flip();
 }
-
-var DEVS = [];
-var selected = 0;
-var selitem = 0;
-var items =['CO2', 'Temp', 'Humd'];
 
 function drawAll(){
   var i = 0;
@@ -103,7 +112,7 @@ setWatch(function (){
 },BTN2,{edge:"falling",repeat:true});
 
 setWatch(function (){
-  selitem = (selitem+1) % 3;
+  selitem = (selitem+1) % NITEMS;
   drawAll();
 },BTN1,{edge:"falling",repeat:true});
   

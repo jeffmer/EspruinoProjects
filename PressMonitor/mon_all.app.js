@@ -79,9 +79,10 @@ function end_flash(){
   if (flash) flash = clearInterval(flash);
 }
 
-function updateBT(r) {
-  var temp = Math.round(r.temp*10)
-  var data = new Uint8Array([r.co2>>8,r.co2, temp>>8,temp, Math.round(r.humid),E.getBattery()]);
+function updateBT(r,p) {
+  var temp = Math.round(r.temp*10);
+  var press = Math.round(p.pressure);
+  var data = new Uint8Array([r.co2>>8,r.co2, temp>>8,temp, Math.round(r.humid),E.getBattery(),press>>8,press]);
   NRF.setAdvertising({}, {
     manufacturer: 0x590,
     manufacturerData: data
@@ -93,7 +94,7 @@ function oneShot(){
   SCD41.oneShotMeas();
   setTimeout(function(){
     if(SCD41.dataready()) READING = SCD41.readMeas();
-    updateBT(READING);
+    updateBT(READING,PREADING);
     end_flash();
     var co2 = READING.co2
     if (co2>1000 && co2<1200 )
@@ -132,12 +133,12 @@ function drawClock(x,y){
 
 function drawDisp(){
   g.clearRect(0,0,W-1,H-1);
-  drawClock(60,H/2-6);
+  drawClock(60,H/2-10);
   drawBat(E.getBattery());
   if (E.charging) drawCharging();
   if (connected) drawBlue();
-  g.fillRect(W/2-7,H/2-24,W/2-5,H/2+28);
-  drawReading(W/2+2,H/2-24);
+  g.fillRect(W/2-7,30,W/2-5,106);
+  drawReading(W/2,30);
   g.flip();
 }
 
