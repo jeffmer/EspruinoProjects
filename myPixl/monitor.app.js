@@ -3,22 +3,24 @@ eval(STOR.read("trend.js"));
 var W = g.getWidth();
 var H = g.getHeight();
 
-function drawReading(x,y,n,d,sel){
-  function highlight(v,s,x,y){
-    if (v) g.setColor(g.theme.fgH).setBgColor(g.theme.bgH).clearRect(x,y,x+g.stringWidth(s),y+g.getFontHeight());
-    g.drawString(s,x,y);
-    if (v) g.setColor(g.theme.fg).setBgColor(g.theme.bg);
-  }
+function highlight(v,s,x,y){
+    function setc(v){
+        return g.setColor(v?g.theme.fgH:g.theme.fg).setBgColor(v?g.theme.bgH:g.theme.bg);
+    }
+    g.setFontAlign(-1,-1).setFont("8x16",1);
+    setc(v).clearRect(x,y,x+g.stringWidth(s),y+g.getFontHeight()).drawString(s,x,y);
+    if(v) setc(false);
+}
+
+function drawReading(x,y,d,sel){
   co2 = d.getInt16(0,false);
   temp= d.getInt16(2,false)/10;
   humid = d.getUint8(4);
   bat  = d.getUint8(5);
-  g.setFontAlign(-1,-1).setFont("8x16",1);
-  g.drawString(n,x,y);
-  highlight(sel==0,"CO2 : "+co2+"ppm",x,y+16);
-  highlight(sel==1,"Temp: "+temp.toFixed(1)+"C",x,y+32);
-  highlight(sel==2,"Humd: "+humid+"%",x,y+48);
-  g.drawString("Bat: "+bat+"%",x,y+64);
+  highlight(sel==0,"CO2 : "+co2+"ppm",x,y);
+  highlight(sel==1,"Temp: "+temp.toFixed(1)+"C",x,y+16);
+  highlight(sel==2,"Humd: "+humid+"%",x,y+32);
+  g.drawString("Bat: "+bat+"%",x,y+48);
 }
 
 function showStatus(s){
@@ -38,10 +40,11 @@ function drawAll(){
   g.setFontAlign(0,-1).setFont("12x20",1).drawString("Monitor",125,4);
   g.fillRect(125,30,126,110);
   DEVS.forEach(function(e){
-    drawReading(10+(i%2)*125,28,e.name,e.data,selected==i?selitem:-1);
+    highlight(selected==i,e.name,10,28+16*i);
     ++i;
   });
-  g.fillRect(20+120*selected,112,100+120*selected,119);
+  if(DEVS[selected]) 
+     drawReading(135,28,DEVS[selected].data,selitem);
   g.flip();
 }
 
