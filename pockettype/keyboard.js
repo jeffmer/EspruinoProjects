@@ -28,11 +28,6 @@ var ASCII = [
    "\x1B!@#$%^&*()\x08\x09AS_+~{}|\":\r\0ZXCVBNM<>\0?\0\0\0\0\0  \0\0\0\0\0"
 ];
 
-function usb_write(key,shifted,layer){
-    var s = shifted?ASCII[1+layer*2][key]:ASCII[layer*2][key];
-    USB.write(s);
-}
-
 global.KEYBOARD = {
     COLS:[D2,D47,D45,D43,D10,D9,D36,D11,D24,D22,D20,D8],
     ROWS:[D6,D17,D32,D38],
