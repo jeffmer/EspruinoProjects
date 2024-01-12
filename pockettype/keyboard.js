@@ -23,8 +23,8 @@ KEYMAP[1] = new Uint8Array([
 
 var ASCII = [
    "\x1Bqwertyuiop\x08\x09asdfghjkl;\r\0zxcvbnm,.\0/\0\0\0\0\0  \0\0\0\0\0",
-   "\x1BQWERTYUIOP\x08\x09ASDFGHJKL:\r\0zxcvbnm,.\0/\0\0\0\0\0  \0\0\0\0\0",
-   "\x1B1234567890\x08\x09AS-=`[]\\';\r\0ZXCVBNM<>\0?\0\0\0\0\0  \0\0\0\0\0",
+   "\x1BQWERTYUIOP\x08\x09ASDFGHJKL:\r\0zxcvbnm,.\0?\0\0\0\0\0  \0\0\0\0\0",
+   "\x1B1234567890\x08\x09AS-=`[]\\';\r\0ZXCVBNM<>\0/\0\0\0\0\0  \0\0\0\0\0",
    "\x1B!@#$%^&*()\x08\x09AS_+~{}|\":\r\0ZXCVBNM<>\0?\0\0\0\0\0  \0\0\0\0\0"
 ];
 
