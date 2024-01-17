@@ -29,6 +29,7 @@ var ASCII = [
 ];
 
 global.KEYBOARD = {
+    ENTER:0, UP:1, DOWN:2, LEFT:3,RIGHT:4,ESC:99,
     COLS:[D2,D47,D45,D43,D10,D9,D36,D11,D24,D22,D20,D8],
     ROWS:[D6,D17,D32,D38],
     keystate:new Uint8Array(48),
@@ -49,9 +50,36 @@ global.KEYBOARD = {
     },
 
     action:function(k,e){
-        if (e==2) return;
-        if (k == 40) {this.layer=0;D15.reset();}
-        if (k == 43) {this.layer=1;D15.set()}
+        if (e==2 ) return;
+        if (e==1)
+        switch(k) {
+            case 0:
+                this.emit("key",this.ESC);
+                break;
+            case 23:
+                this.emit("key",this.ENTER);
+                break;
+            case 34:
+                this.emit("key",this.UP);
+                return;
+            case 40:
+                this.layer=0;
+                D15.reset();
+                return;
+            case 43:
+                this.layer=1;
+                D15.set();
+                return;
+            case 45:
+                this.emit("key",this.LEFT);
+                return;
+            case 46:
+                this.emit("key",this.DOWN);
+                return;
+            case 47:
+                this.emit("key",this.RIGHT);
+                return; 
+        }   
         var key = KEYMAP[this.layer][k];
         if (key>=224){
             if (key==224) this.modify(kb.MODIFY.CTRL,e);

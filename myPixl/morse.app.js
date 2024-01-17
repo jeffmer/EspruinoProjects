@@ -120,10 +120,17 @@ function gotch(){
   code="";
   display();
 }
-            
+
+
+P2.setUI("updown",(v)=>{
+    if (v) add(v<0?".":"-");
+    else gotch();
+});
+/*           
 setWatch(()=>add("."),BTN3,{edge:"falling",repeat:true});
 setWatch(()=>add("-"),BTN1,{edge:"falling",repeat:true});
 setWatch(()=>gotch(),BTN2,{edge:"falling",repeat:true});
+*/
 display(code);
 
 

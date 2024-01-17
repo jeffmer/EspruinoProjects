@@ -12,9 +12,6 @@ function drawBat(v){
   g.fillRect(x+4,y+6,x+4+Math.ceil(v*(s-12)/100),y+17);
 }
 
-
-var connected = false;
-
 function drawBlue(){
   g.drawImage(atob("CxQBBgDgFgJgR4jZMawfAcA4D4NYybEYIwTAsBwDAA=="), 4, 100);
 }
@@ -44,32 +41,19 @@ function drawClock(){
   g.drawString(""+E.getTemperature().toFixed(1)+"C",4,4);
   drawBat(E.getBattery());
   if (E.charging) drawCharging();
-  if (connected) drawBlue();
+  if (NRF.getSecurityStatus().connected) drawBlue();
   g.flip();
 }
 
 NRF.on("connect", function(a){
   drawBlue();
-  connected=true;
-  E.setConsole(Bluetooth)
   g.flip();
 });
   
 NRF.on("disconnect", function(a){
   g.clearRect(4,100,20,120);
-  connected=false;
-  E.setConsole(Terminal)
   g.flip();
 });
-
-eval(STOR.read("keyboard.js"));
-
-KEYBOARD.device = Terminal;
-KEYBOARD.init();
-setTimeout(()=>E.setConsole(Terminal),500);
-
-E.on("kill",()=>E.setConsole(Bluetooth));
-
 
 drawClock();
 setInterval(drawClock,30000);

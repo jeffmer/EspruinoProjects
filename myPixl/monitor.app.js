@@ -99,6 +99,22 @@ function getHistory(devname,itemname){
   });
 }
 
+P2.setUI("leftright",(v)=>{
+    if(!v){
+      if (DEVS[selected]) {
+        getHistory(DEVS[selected].name,items[selitem]);
+        E.showMessage("Connecting to:\n"+DEVS[selected].name,{title:"Monitor"});
+      }
+    } else if (v<0){
+      selitem = (selitem+1) % NITEMS;
+      drawAll();
+    } else {
+      selected = (selected+1) % 2;
+      drawAll();
+    }
+})
+
+/*
 setWatch(function (){
   selected = (selected+1) % 2;
   drawAll();
@@ -115,6 +131,6 @@ setWatch(function (){
   selitem = (selitem+1) % NITEMS;
   drawAll();
 },BTN1,{edge:"falling",repeat:true});
-  
+*/
 scanForDevices();
 setInterval(scanForDevices,120000);
