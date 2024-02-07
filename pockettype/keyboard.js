@@ -41,7 +41,10 @@ global.KEYBOARD = {
     device:undefined,
 
     outch: function(key,shifted){
-        var s = shifted?ASCII[1+this.layer*2][key]:ASCII[this.layer*2][key];
+        var s;
+        if (this.layer==0) s = shifted?ASCII[1][key]:ASCII[0][key];
+        else if (this.layer==1) s = ASCII[2][key];
+        else if (this.layer==2) s = ASCII[3][key];
         if (this.device) this.device.inject(s);
     },
 
@@ -51,36 +54,35 @@ global.KEYBOARD = {
 
     action:function(k,e){
         if (e==2 ) return;
-        if (e==1)
         switch(k) {
             case 0:
-                this.emit("key",this.ESC);
+                if (e==1) this.emit("key",this.ESC);
                 break;
             case 23:
-                this.emit("key",this.ENTER);
+                if (e==1) this.emit("key",this.ENTER);
                 break;
             case 34:
-                this.emit("key",this.UP);
+                if (e==1) this.emit("key",this.UP);
                 return;
             case 40:
-                this.layer=0;
-                D15.reset();
+                if (e==1) this.layer=2;
+                if (e==0) this.layer=0;
                 return;
             case 43:
-                this.layer=1;
-                D15.set();
+                if (e==1) this.layer=1;
+                if (e==0) this.layer=0;
                 return;
             case 45:
-                this.emit("key",this.LEFT);
+                if (e==1) this.emit("key",this.LEFT);
                 return;
             case 46:
-                this.emit("key",this.DOWN);
+                if (e==1) this.emit("key",this.DOWN);
                 return;
             case 47:
-                this.emit("key",this.RIGHT);
+                if (e==1) this.emit("key",this.RIGHT);
                 return; 
         }   
-        var key = KEYMAP[this.layer][k];
+        var key = KEYMAP[this.layer>=1?1:0][k];
         if (key>=224){
             if (key==224) this.modify(kb.MODIFY.CTRL,e);
             else if (key ==225) this.modify(kb.MODIFY.SHIFT,e);

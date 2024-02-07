@@ -70,10 +70,10 @@ P2.setUI = function(mode, cb) {
     function doit(v){
       switch(v){
         case 0: break;
-        case 1: cb(-1);break;
-        case 2: cb(1);break;
+        case 1: if (cb) cb(-1);break;
+        case 2: if (cb) cb(1);break;
         case 3: break;
-        case 4: cb();break;
+        case 4: if (cb) cb();break;
         case 99: load("launch.js");
       }
     }
