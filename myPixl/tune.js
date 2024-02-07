@@ -24,8 +24,13 @@ class Tune {
     }
 
     beep(f,d){
+        function delay_ms(d) {var t = getTime()+d/1000; while(getTime()<t);}
         this.freq(f);
-        setTimeout(this.freq.bind(this,0),d);
+        if (d<1000){
+            delay_ms(d);
+            this.freq(0);
+        } else
+            setTimeout(this.freq.bind(this,0),d);
     }
 
     play(){

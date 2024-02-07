@@ -1,4 +1,4 @@
-
+if (!P2.setUI) eval(STOR.read("setui.js"));
 
 const codes = {
   // letters
@@ -109,6 +109,7 @@ function display(){
 
 
 function add(c){
+  P2.sound.beep(1200,c=='.'?50:300);
   code = code+c;
   ch = char(code);
   display();
