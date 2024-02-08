@@ -10,7 +10,7 @@ The sensor is mounted below the circuit board in the picture of the prototype (t
 
 Measurements are taken every 5 minutes and recorded every 10 minutes. The 800mah Lipo should last about two weeks between charges.
 
- Recorded measurements are displayed (see below) and can be retrieved using bluetooth. In addition, the current reading of CO2, temperature and humidity is included in the manufacturers data in the BLE advertising messages.
+ Recorded measurements are displayed (see below) and can be retrieved using bluetooth. In addition, the current reading of CO2, temperature and hmidity is included in the manufacturers data in the BLE advertising messages.
 
  ![](trendco2.jpg)
 
