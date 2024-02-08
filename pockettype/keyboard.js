@@ -8,24 +8,24 @@ const K = kb.KEY;
 var KEYMAP = [];
 
 KEYMAP[0] = new Uint8Array([
-    K.ESC,   K.Q,    K.W,   K.E,    K.R,      K.T,      K.Y,       K.U,       K.I,         K.O,      K.P,         K.BACKSPACE,
-    K.TAB,   K.A,    K.S,   K.D,    K.F,      K.G,      K.H,       K.J,       K.K,         K.L,      K.SEMICOLON, K.ENTER,
-    K.SHIFT, K.Z,    K.X,   K.C,    K.V,      K.B,      K.N,       K.M,       K.COMMA,     K.DOT,    K.UP,        K.SLASH, 
-    K.CAPS,  K.CTRL, K.GUI, K.ALT,  K.LOWER,  K.SPACE,  K.SPACE,   K.RAISE,   K.ALT,       K.LEFT,   K.DOWN,      K.RIGHT, 
+    K.TAB,   K.Q,    K.W,   K.E,    K.R,      K.T,      K.Y,       K.U,       K.I,         K.O,      K.P,         K.BACKSPACE,
+    K.ESC,   K.A,    K.S,   K.D,    K.F,      K.G,      K.H,       K.J,       K.K,         K.L,      K.SEMICOLON, K.SQUOTE,
+    K.SHIFT, K.Z,    K.X,   K.C,    K.V,      K.B,      K.N,       K.M,       K.COMMA,     K.DOT,    K.SLASH,     K.ENTER, 
+    K.CAPS,  K.CTRL, K.ALT, K.GUI,  K.LOWER,  K.SPACE,  K.SPACE,   K.RAISE,   K.ALT,       K.LEFT,   K.DOWN,      K.RIGHT, 
 ]);
 
 KEYMAP[1] = new Uint8Array([
-    K.ESC,   K.ONE,  K.TWO, K.THREE, K.FOUR,  K.FIVE,   K.SIX,     K.SEVEN,   K.EIGHT,     K.NINE,   K.ZERO,      K.BACKSPACE,
+    K.TILDE, K.ONE,  K.TWO, K.THREE, K.FOUR,  K.FIVE,   K.SIX,     K.SEVEN,   K.EIGHT,     K.NINE,   K.ZERO,      K.BACKSPACE,
     K.TAB,   K.A,    K.S,   K.MINUS, K.EQUALS,K.TILDE,  K.LSQUARE, K.RSQUARE, K.BACKSLASH, K.SQUOTE, K.SEMICOLON, K.ENTER,
-    K.SHIFT, K.Z,    K.X,   K.C,     K.V,     K.B,      K.N,       K.M,       K.COMMA,     K.DOT,    K.UP,        K.SLASH, 
-    K.CAPS,  K.CTRL, K.GUI, K.ALT,   K.LOWER, K.SPACE,  K.SPACE,   K.RAISE,   K.ALT,       K.LEFT,   K.DOWN,      K.RIGHT, 
+    K.SHIFT, K.Z,    K.X,   K.C,     K.V,     K.B,      K.N,       K.M,       K.COMMA,     K.DOT,    K.UP,        K.ENTER, 
+    K.CAPS,  K.CTRL, K.GUI, K.ALT,   K.LOWER, K.SPACE,  K.SPACE,   K.RAISE,   K.LEFT,      K.DOWN,   K.UP,        K.RIGHT, 
 ]);
 
 var ASCII = [
-   "\x1Bqwertyuiop\x08\x09asdfghjkl;\r\0zxcvbnm,.\0/\0\0\0\0\0  \0\0\0\0\0",
-   "\x1BQWERTYUIOP\x08\x09ASDFGHJKL:\r\0ZXCVBNM<>\0?\0\0\0\0\0  \0\0\0\0\0",
-   "\x1B1234567890\x08\x09AS-=`[]\\';\r\0zxcvbnm,.\0/\0\0\0\0\0  \0\0\0\0\0",
-   "\x1B!@#$%^&*()\x08\x09AS_+~{}|\":\r\0ZXCVBNM<>\0?\0\0\0\0\0  \0\0\0\0\0"
+   "\x09qwertyuiop\x08\x1Basdfghjkl;\'\0zxcvbnm,./\r\0\0\0\0\0\0  \0\0\0\0\0",
+   "\x09QWERTYUIOP\x08\x1BASDFGHJKL:\"\0ZXCVBNM<>?\r\0\0\0\0\0\0  \0\0\0\0\0",
+   "\`1234567890\x08\0\0\0\0\0\0\0-=[]\\\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0",
+   "~!@#$%^&*()\x08\\0\0\0\0\0\0\0_+{}|\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0",
 ];
 
 global.KEYBOARD = {
@@ -55,15 +55,12 @@ global.KEYBOARD = {
     action:function(k,e){
         if (e==2 ) return;
         switch(k) {
-            case 0:
+            case 12:
                 if (e==1) this.emit("key",this.ESC);
                 break;
-            case 23:
+            case 35:
                 if (e==1) this.emit("key",this.ENTER);
                 break;
-            case 34:
-                if (e==1) this.emit("key",this.UP);
-                return;
             case 40:
                 if (e==1) this.layer=2;
                 if (e==0) this.layer=0;
@@ -72,11 +69,14 @@ global.KEYBOARD = {
                 if (e==1) this.layer=1;
                 if (e==0) this.layer=0;
                 return;
-            case 45:
+            case 44:
                 if (e==1) this.emit("key",this.LEFT);
+                return;9
+            case 45:
+                if (e==1) this.emit("key",this.DOWN);
                 return;
             case 46:
-                if (e==1) this.emit("key",this.DOWN);
+                if (e==1) this.emit("key",this.UP);
                 return;
             case 47:
                 if (e==1) this.emit("key",this.RIGHT);
