@@ -11,7 +11,7 @@ KEYMAP[0] = new Uint8Array([
     K.TAB,   K.Q,    K.W,   K.E,    K.R,      K.T,      K.Y,       K.U,       K.I,         K.O,      K.P,         K.BACKSPACE,
     K.ESC,   K.A,    K.S,   K.D,    K.F,      K.G,      K.H,       K.J,       K.K,         K.L,      K.SEMICOLON, K.SQUOTE,
     K.SHIFT, K.Z,    K.X,   K.C,    K.V,      K.B,      K.N,       K.M,       K.COMMA,     K.DOT,    K.SLASH,     K.ENTER, 
-    K.CAPS,  K.CTRL, K.ALT, K.GUI,  K.LOWER,  K.SPACE,  K.SPACE,   K.RAISE,   K.ALT,       K.LEFT,   K.DOWN,      K.RIGHT, 
+    K.CAPS,  K.CTRL, K.ALT, K.GUI,  K.LOWER,  K.SPACE,  K.SPACE,   K.RAISE,   K.LEFT,      K.DOWN,   K.UP,      K.RIGHT, 
 ]);
 
 KEYMAP[1] = new Uint8Array([
@@ -29,7 +29,7 @@ var ASCII = [
 ];
 
 global.KEYBOARD = {
-    ENTER:0, UP:1, DOWN:2, LEFT:3,RIGHT:4,ESC:99,
+    NONE:0, ENTER:1, UP:2, DOWN:3, LEFT:4,RIGHT:5,ESC:99,
     COLS:[D2,D47,D45,D43,D10,D9,D36,D11,D24,D22,D20,D8],
     ROWS:[D6,D17,D32,D38],
     keystate:new Uint8Array(48),
@@ -37,15 +37,16 @@ global.KEYBOARD = {
     alive:0,
     modifiers:0,
     layer:0,
+    toConsole:false,
     ticker:undefined,
     device:undefined,
 
-    outch: function(key,shifted){
-        var s;
+    getch: function(key,shifted){
+        var s ="";
         if (this.layer==0) s = shifted?ASCII[1][key]:ASCII[0][key];
         else if (this.layer==1) s = ASCII[2][key];
         else if (this.layer==2) s = ASCII[3][key];
-        if (this.device) this.device.inject(s);
+        return s;
     },
 
     modify:function(m,e){
@@ -54,13 +55,20 @@ global.KEYBOARD = {
 
     action:function(k,e){
         if (e==2 ) return;
+        var actcode = 0;
         switch(k) {
             case 12:
-                if (e==1) this.emit("key",this.ESC);
+                if (e==1) actcode = this.ESC;
                 break;
             case 35:
-                if (e==1) this.emit("key",this.ENTER);
+                if (e==1) actcode = this.ENTER;
                 break;
+            case 39:
+                if (e==1) {
+                    this.toConsole=!this.toConsole;
+                    LED1.write(this.toConsole);
+                }
+                return;
             case 40:
                 if (e==1) this.layer=2;
                 if (e==0) this.layer=0;
@@ -70,17 +78,17 @@ global.KEYBOARD = {
                 if (e==0) this.layer=0;
                 return;
             case 44:
-                if (e==1) this.emit("key",this.LEFT);
-                return;9
+                if (e==1) actcode = this.LEFT;
+                break;
             case 45:
-                if (e==1) this.emit("key",this.DOWN);
-                return;
+                if (e==1) actcode = this.DOWN;
+                break;
             case 46:
-                if (e==1) this.emit("key",this.UP);
-                return;
+                if (e==1) actcode = this.UP;
+                break;
             case 47:
-                if (e==1) this.emit("key",this.RIGHT);
-                return; 
+                if (e==1) actcode = this.RIGHT;
+                break; 
         }   
         var key = KEYMAP[this.layer>=1?1:0][k];
         if (key>=224){
@@ -92,7 +100,12 @@ global.KEYBOARD = {
             if (e) {
  //               console.log("xy:",k,"key: ",key, " Modifier: ",this.modifiers);
  //               kb.tap(key,this.modifiers);
-                  this.outch(k,this.modifiers&kb.MODIFY.SHIFT,this.layer);
+                  var c = this.getch(k,this.modifiers&kb.MODIFY.SHIFT,this.layer);
+                  if (this.toConsole){
+                    if (this.device) this.device.inject(c);
+                  } else {
+                    this.emit("key",{act:actcode,char:c});
+                  }
             }
         }
     },

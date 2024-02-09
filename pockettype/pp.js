@@ -65,24 +65,23 @@ P2.appRect = { x: 0, y: 0, w: 240, h: 122, x2: 249, y2: 121 };
 
 require("Font8x16").add(Graphics);
 
-
 P2.setUI = function(mode, cb) {
-    function doit(v){
-      switch(v){
-        case 0: break;
-        case 1: if (cb) cb(-1);break;
-        case 2: if (cb) cb(1);break;
-        case 3: break;
-        case 4: if (cb) cb();break;
-        case 99: load("launch.js");
-      }
+  function doit(v){
+    switch(v.act){
+      case KEYBOARD.NONE: break;
+      case KEYBOARD.ENTER: cb(); break;
+      case KEYBOARD.UP: cb(-1); break;
+      case KEYBOARD.DOWN: cb(1);break;
+      case KEYBOARD.LEFT: cb(-1);break;
+      case KEYBOARD.RIGHT:cb(1);break;
+      case KEYBOARD.ESC: load("launch.js");
     }
-    KEYBOARD.removeAllListeners("key");
-    KEYBOARD.on("key",doit);
+  }
+  KEYBOARD.removeAllListeners("key");
+  KEYBOARD.on("key",doit);
 }
 
 P2.setUI();
-
 
 E.showMessage = function(msg,options) {
   if ("string" == typeof options)
