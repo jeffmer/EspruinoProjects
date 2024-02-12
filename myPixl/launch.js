@@ -1,5 +1,5 @@
-eval(STOR.read("menu.js"));
-if (!E.showAlert) eval(STOR.read("prompt.js"));
+
+if (!P2.setUI) eval(STOR.read("setui.js"));
 
 var apps = STOR.list(/\.app.js$/).map(app=>{return app.split('.')[0];});
 
@@ -9,98 +9,55 @@ apps.sort((a,b)=>{
   return 0;
 });
                                       
-const appsmenu = {
-'': { 'title': 'Programs' }
-};
-  if (apps.length > 0) {
-    apps.reduce((menu, app) => {
-      menu[app] = () => {load(app+".app.js")};
-      return menu;
-    }, appsmenu);     
+const icons = {};
+
+if (apps.length > 0) {
+  apps.reduce((arr, app) => {
+    var icon = STOR.read(app+".icon");
+    arr[app] = icon?icon:STOR.read("anapp.icon");
+    return arr;
+  }, icons);     
+}
+
+var Napps = apps.length;
+var SELECTED = 0;
+var Wstart = 0;
+const XOFF = 5;
+const YOFF = 45;
+const CELL = 60;
+
+function draw_icon(p,n,selected) {
+    var x = p*CELL+XOFF; 
+    var y = YOFF;
+    g.setColor(1);
+    var name = apps[n]
+    try{g.drawImage(icons[name],x+6,y);} catch(e){}
+    g.setFontAlign(0,-1,0).setFont("6x8",1);
+    g.drawString(name,x+CELL/2,y+50);
+    if (selected) g.drawRect(x,y,x+CELL-1,y+CELL-1);
+}
+
+
+function drawAll(){
+  g.clear();
+  g.setFontAlign(0,-1).setFont("Vector",18).drawString("Pocket Espruino",125,10);
+  if (SELECTED>Wstart+3) Wstart+=(SELECTED-Wstart-3);
+  else if (SELECTED<Wstart) Wstart-=(Wstart-SELECTED);
+  for (var i=0;i<4;++i)
+    draw_icon(i,i+Wstart,SELECTED==(i+Wstart));
+  g.flip();
+}
+
+P2.setUI("leftright",(v)=>{
+  if (SELECTED<0) SELECTED=0;
+  if (v) {
+    SELECTED+=v;
+    SELECTED = SELECTED<0?0:SELECTED>=Napps?Napps-1:SELECTED;
+    drawAll();
   }
-
-  appsmenu["Settings>"] = ()=>showSettingsMenu();
-  appsmenu['App Settings>'] = ()=>showAppSettingsMenu();
-
-  function showSettingsMenu(){
-    const smenu = {
-      "" : { "title" : "Settings" },
-      'Invert Display': {
-        value: settings.invert,
-        format: () => (settings.invert ? 'Yes' : 'No'),
-        onchange: () => {settings.invert = !settings.invert;}
-      },
-      'Rotate Display': {
-        value: settings.rotated,
-        format: () => (settings.rotated ? 'Yes' : 'No'),
-        onchange: () => {settings.rotated = !settings.rotated;}
-      },
-      'Sync Time':function() {
-          if (NRF.ctsIsActive()) {
-            E.showMessage("Syncing time with iPhone",{title:"settings"});
-            NRF.ctsGetTime().then(function(e){
-              ctsUpdate(e);
-              load("clock.app.js");
-            });
-          } else  
-          E.showMessage("CTS SErvice not Active",{title:"settings"});
-      },
-      "Exit" : function() { STOR.writeJSON("settings.json",settings); E.showMenu(appsmenu);}
-    }
-    E.showMenu(smenu);
-  }
-
-  function showAppSettingsMenu() {
-    let appmenu = {
-      '': { 'title': 'App Settings' },
-      '< Back': ()=>E.showMenu(appsmenu),
-    }
-    const apps = STOR.list(/\.settings\.js$/)
-      .map(s => s.substr(0, s.length-12))
-      .map(id => {
-        const a=STOR.readJSON(id+'.info',1) || {name: id};
-        return {id:id,name:a.name,sortorder:a.sortorder};
-      })
-      .sort((a, b) => {
-        const n = (0|a.sortorder)-(0|b.sortorder);
-        if (n) return n; // do sortorder first
-        if (a.name<b.name) return -1;
-        if (a.name>b.name) return 1;
-        return 0;
-      })
-    if (apps.length === 0) {
-      appmenu['No app has settings'] = () => { };
-    }
-    apps.forEach(function (app) {
-      appmenu[app.name] = () => { showAppSettings(app) };
-    })
-    E.showMenu(appmenu)
-  }
-  function showAppSettings(app) {
-    const showError = msg => {
-      E.showMessage(`${app.name}:\n${msg}!\n\nBTN1 to go back`);
-      setWatch(showAppSettingsMenu, BTN1, { repeat: false });
-    }
-    let appSettings = STOR.read(app.id+'.settings.js');
-    try {
-      appSettings = eval(appSettings);
-    } catch (e) {
-      console.log(`${app.name} settings error:`, e)
-      return showError('Error in settings');
-    }
-    if (typeof appSettings !== "function") {
-      return showError('Invalid settings');
-    }
-    try {
-      // pass showAppSettingsMenu as "back" argument
-      appSettings(()=>showAppSettingsMenu());
-    } catch (e) {
-      console.log(`${app.name} settings error:`, e)
-      return showError('Error in settings');
-    }
-  }
-  
+  else if (SELECTED>=0) load(apps[SELECTED]+".app.js");
+});
 
 
+drawAll();
 
-E.showMenu(appsmenu);
