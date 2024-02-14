@@ -2,6 +2,9 @@ function drawBlue(){
     g.drawImage(atob("CxQBBgDgFgJgR4jZMawfAcA4D4NYybEYIwTAsBwDAA=="), 4, 100);
 }
 
+NRF.removeAllListeners("connect");
+NRF.removeAllListeners("disconnect");
+
 NRF.on("connect", function(a){
     KEYBOARD.toBLE = true;
     drawBlue();
@@ -15,6 +18,8 @@ NRF.on("disconnect", function(a){
 });
 
 g.clear().setFont("Vector",24).setFontAlign(0,0).drawString("Bluetooth Keyboard",125,60).flip();
+
+if (NRF.getSecurityStatus().connected) NRF.disconnect();
 
 NRF.setServices(undefined, { hid : kb.report });
 

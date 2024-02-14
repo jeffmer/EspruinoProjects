@@ -45,18 +45,14 @@ E.getBattery = function (){
     return pc>100?100:pc;
 };
 
-if (NRF.getSecurityStatus().connected) 
-   E.setConsole(Bluetooth)
-else
-   E.setConsole(Terminal);
+NRF.setServices(undefined,{uart:true});
 
-NRF.on("connect", function(a){
-  E.setConsole(Bluetooth);
-});
+if (!NRF.getSecurityStatus().connected) E.setConsole(Terminal);
 
 NRF.on("disconnect", function(a){
   E.setConsole(Terminal);
 });
+
 
 g.theme= {fg:1,bg:0,fg2:1,bg2:0,fgH:0,bgH:1,dark:true};
 g.invert(settings.invert);
