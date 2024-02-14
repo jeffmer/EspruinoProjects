@@ -73,8 +73,15 @@ P2.setUI = function(mode, cb) {
       case KEYBOARD.ESC: load("launch.js");
     }
   }
+  function pass(v){
+    if (v.act == KEYBOARD.ESC ) load("launch.js");
+    else cb(v.act);
+  }
   KEYBOARD.removeAllListeners("key");
-  KEYBOARD.on("key",doit);
+  if (!mode || mode == "leftright" || mode == "updown" )
+    KEYBOARD.on("key",doit);
+  else if (mode == "arrows") 
+    KEYBOARD.on("key",pass);
 }
 
 P2.setUI();
