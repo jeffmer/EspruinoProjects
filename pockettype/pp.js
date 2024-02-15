@@ -56,6 +56,8 @@ NRF.on("disconnect", function(a){
 
 g.theme= {fg:1,bg:0,fg2:1,bg2:0,fgH:0,bgH:1,dark:true};
 g.invert(settings.invert);
+h.theme= {fg:1,bg:0,fg2:1,bg2:0,fgH:0,bgH:1,dark:true};
+h.invert(settings.invert);
 P2 = {}; // environment 
 P2.appRect = { x: 0, y: 0, w: 240, h: 122, x2: 249, y2: 121 };
 

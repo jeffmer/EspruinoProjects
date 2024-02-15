@@ -41,6 +41,7 @@ global.KEYBOARD = {
     toBLE:false,
     ticker:undefined,
     device:undefined,
+    repeat:undefined,
 
     getch: function(key,shifted){
         var s ="";
@@ -54,8 +55,8 @@ global.KEYBOARD = {
     },
 
     action:function(k,e){
-        if (e==2 ) return;
         var actcode = 0;
+        if (this.repeat && e==0) this.repeat = clearInterval(this.repeat);
         switch(k) {
             case 12:
                 if (e==1) actcode = this.ESC;
@@ -79,18 +80,23 @@ global.KEYBOARD = {
                 if (e==0) this.layer=0;
                 return;
             case 44:
-                if (e==1) actcode = this.LEFT;
+                if (e>0) actcode = this.LEFT;
+                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.LEFT,char:"\0"}),350);
                 break;
             case 45:
-                if (e==1) actcode = this.DOWN;
+                if (e>0) actcode = this.DOWN;
+                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.DOWN,char:"\0"}),350);
                 break;
             case 46:
-                if (e==1) actcode = this.UP;
+                if (e>0) actcode = this.UP;
+                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.UP,char:"\0"}),350);
                 break;
             case 47:
-                if (e==1) actcode = this.RIGHT;
+                if (e>0) actcode = this.RIGHT;
+                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.RIGHT,char:"\0"}),350);
                 break; 
-        }   
+        } 
+        if (e==2) return;
         var key = KEYMAP[this.layer>=1?1:0][k];
         if (key>=224){
             if (key==224) this.modify(kb.MODIFY.CTRL,e);
