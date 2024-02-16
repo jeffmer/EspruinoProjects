@@ -19,6 +19,11 @@ var EDITOR = {
         if (this.lines) this.total = this.lines.length;
     },
 
+    create:function(fn){
+        this.filename = fn;
+        this.lines = [""];
+        this.total = this.lines.length;
+    },
 
     adjrow:function(v){
         var r = this.row+v;
@@ -39,6 +44,11 @@ var EDITOR = {
             {this.leftcol = this.col; this.dirty=true;}
         else if (this.col >= this.leftcol+this.maxcol)
             {this.leftcol = this.col-this.maxcol+1; this.dirty=true;}
+    },
+
+    insertLine:function(){
+        var line = this.lines[this.row];
+        this.lines[this.row] = this.slice(0,this.col);
     },
 
     draw:function(){
@@ -66,33 +76,40 @@ var EDITOR = {
     }
 }
 
+function exit_editor() {
+    E.showPrompt("Exit Editor", {buttons: {"Save&Exit":0,"Exit":1,"Cancel":2}}).then(function(v) {
+      if (v==0) load("launch.js");
+      else if (v==1) {console.log("save file and exit"); load("launch.js");}
+      else {
+        P2.setUI("arrows",(v)=>{
+            move(v);
+        });
+        EDITOR.draw();
+      }
+    });
+}
 
 function move(v){
-    switch(v){
+    switch(v.act){
       case KEYBOARD.NONE: break;
-      case KEYBOARD.ENTER: break;
-      case KEYBOARD.UP:   EDITOR.adjrow(-1); break
-      case KEYBOARD.DOWN: EDITOR.adjrow(1);; break;
-      case KEYBOARD.LEFT: EDITOR.adjcol(-1);; break
-      case KEYBOARD.RIGHT:EDITOR.adjcol(1);; break
+      case KEYBOARD.ENTER: EDITOR.insertLine();break;
+      case KEYBOARD.UP:   EDITOR.adjrow(-1); break;
+      case KEYBOARD.DOWN: EDITOR.adjrow(1); break;
+      case KEYBOARD.LEFT: EDITOR.adjcol(-1);break;
+      case KEYBOARD.RIGHT:EDITOR.adjcol(1); break;
+      case KEYBOARD.ESC:exit_editor();return;
     }
     EDITOR.draw();
 }
 
-function startEdit(fn){
+function startEdit(fn,nf){
     P2.setUI("arrows",(v)=>{
         move(v);
     });
-    EDITOR.open(fn);
+    if (nf) EDITOR.create(fn);
+    else EDITOR.open(fn);
     EDITOR.draw();
 }
-
-function edit_file(fn) {
-    E.showPrompt("Edit\n"+fn+"?", {buttons: {"No":false,"Yes":true}}).then(function(v) {
-      if (v) startEdit(fn);
-      else E.showMenu(filesmenu);
-    });
-  }
 
 function init(){
     var files = STOR.list(/\.js$/);
@@ -103,13 +120,14 @@ function init(){
     });
     function edit_file(fn) {
         E.showPrompt("Edit\n"+fn+"?", {buttons: {"No":false,"Yes":true}}).then(function(v) {
-          if (v) startEdit(fn);
+          if (v) startEdit(fn,false);
           else E.showMenu(filesmenu);
         });
     }
     const filesmenu = {
         '': { 'title': 'Open File' }
         };
+        filesmenu["New File>"] = ()=>startEdit("test.app.js",true);
         if (files.length > 0) {
         files.reduce((menu, file) => {
             menu[file] = () => {edit_file(file)};

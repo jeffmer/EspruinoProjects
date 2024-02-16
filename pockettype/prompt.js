@@ -55,7 +55,7 @@ E.showPrompt = function(msg,options) {
       });
       g.flip();
     }
-    g.reset().clearRect(P2.appRect); // clear screen
+    g.reset().clear(); // clear screen
     if (!msg) {
       P2.setUI(); // remove watches
       return Promise.resolve();

@@ -59,7 +59,7 @@ g.invert(settings.invert);
 h.theme= {fg:1,bg:0,fg2:1,bg2:0,fgH:0,bgH:1,dark:true};
 h.invert(settings.invert);
 P2 = {}; // environment 
-P2.appRect = { x: 0, y: 0, w: 240, h: 122, x2: 249, y2: 121 };
+P2.appRect = { x: 0, y: 0, w: 250, h: 122, x2: 249, y2: 121 };
 
 require("Font8x16").add(Graphics);
 
@@ -75,15 +75,11 @@ P2.setUI = function(mode, cb) {
       case KEYBOARD.ESC: load("launch.js");
     }
   }
-  function pass(v){
-    if (v.act == KEYBOARD.ESC ) load("launch.js");
-    else cb(v.act);
-  }
   KEYBOARD.removeAllListeners("key");
   if (!mode || mode == "leftright" || mode == "updown" )
     KEYBOARD.on("key",doit);
   else if (mode == "arrows") 
-    KEYBOARD.on("key",pass);
+    KEYBOARD.on("key",cb);
 }
 
 P2.setUI();
