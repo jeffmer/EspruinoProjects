@@ -2,13 +2,12 @@ eval(STOR.read("menu.js"));
 if (!E.showPrompt) eval(STOR.read("prompt.js"));
 
 var EDITOR = {
-    dirty:true,
     toprow:0,
     leftcol:0,
     maxrow:15,
     maxcol:40,
     row:0,
-    col:0,
+    col:-1,
     total:0,
     lines:undefined,
     filename:undefined,
@@ -29,26 +28,57 @@ var EDITOR = {
         var r = this.row+v;
         this.row = r<0 ? 0 : r>=this.total ? this.total-1 : r;
         if(this.row<this.toprow) 
-            {this.toprow = this.row; this.dirty=true;}
+            {this.toprow = this.row;}
         else if (this.row >= this.toprow+this.maxrow)
-            {this.toprow = this.row-this.maxrow+1; this.dirty=true;}
+            {this.toprow = this.row-this.maxrow+1;}
         this.adjcol(0);
     },
-
+    // this.col = -1 is beginning of line
     adjcol:function(v){
         var c = this.col+v;
         var max = this.lines[this.row].length;
-        if (max == 0 ) this.col = 0;
-        else this.col = c<0 ? 0 : c>=max ? max-1 : c;
+        if (max == 0 ) this.col = -1;
+        else this.col = c<-1 ? -1 : c>=max ? max-1 : c;
         if(this.col<this.leftcol) 
-            {this.leftcol = this.col; this.dirty=true;}
+            {this.leftcol = this.col<0 ? 0 :this.col;}
         else if (this.col >= this.leftcol+this.maxcol)
-            {this.leftcol = this.col-this.maxcol+1; this.dirty=true;}
+            {this.leftcol = this.col-this.maxcol+1;}
     },
 
     insertLine:function(){
         var line = this.lines[this.row];
-        this.lines[this.row] = this.slice(0,this.col);
+        this.lines[this.row] = line.slice(0,this.col+1);
+        this.lines.splice(this.row+1,0,line.slice(this.col+1,));
+        this.total = this.lines.length;
+        this.adjrow(1);
+    },
+
+    delChar:function(){
+        var line = this.lines[this.row];
+        if (line.length) {
+           if (this.col>=0){
+            this.lines[this.row] = line.slice(0,this.col) + line.slice(this.col+1);
+            this.adjcol(-1)  
+           } else if (this.row>0) {
+                this.col = this.lines[this.row-1].length;
+                this.lines[this.row-1]=this.lines[this.row-1] + line;
+                this.lines.splice(this.row,1);
+                this.total = this.lines.length;
+                this.adjrow(-1);
+           }          
+        } else if (this.row>0){
+            this.col = this.lines[this.row-1].length;
+            this.lines.splice(this.row,1);
+            this.total = this.lines.length;
+            this.adjrow(-1);
+        }    
+    },
+
+    addChar:function(c){
+        if (c=="\0") return;
+        var line = this.lines[this.row];
+        this.lines[this.row] = line.slice(0,this.col+1) + c + line.slice(this.col+1);
+        this.adjcol(1); 
     },
 
     draw:function(){
@@ -59,13 +89,13 @@ var EDITOR = {
         var es = this.leftcol+this.maxcol;
         var cursrow = this.row-this.toprow;
         var curscol = this.col-this.leftcol;
-        var curschar = this.lines[this.row].charAt(this.col);
+        var curschar = this.col>=0 ? this.lines[this.row].charAt(this.col):" ";
         for (var i =0; i<n; i++) {
             var ll = this.lines[this.toprow+i];
-            g.drawString(ll.slice(bs,es),2,i*8);
-            if (es<ll.length) g.fillRect(244,i*8+2,249,i*8+6);
+            g.drawString(ll.slice(bs,es),6,i*8);
+            if (es<ll.length) g.fillRect(246,i*8+2,249,i*8+6);
             if (i==cursrow){
-                var x = curscol*6;
+                var x = (curscol+1)*6;
                 var y = cursrow*8;
                 g.fillRect(x,y,x+6,y+8).setColor(0).drawString(curschar,x,y);
                 g.setColor(1);
@@ -91,7 +121,8 @@ function exit_editor() {
 
 function move(v){
     switch(v.act){
-      case KEYBOARD.NONE: break;
+      case KEYBOARD.NONE: EDITOR.addChar(v.char);break;
+      case KEYBOARD.BACKSPACE: EDITOR.delChar();break;
       case KEYBOARD.ENTER: EDITOR.insertLine();break;
       case KEYBOARD.UP:   EDITOR.adjrow(-1); break;
       case KEYBOARD.DOWN: EDITOR.adjrow(1); break;

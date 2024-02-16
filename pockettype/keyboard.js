@@ -29,7 +29,7 @@ var ASCII = [
 ];
 
 global.KEYBOARD = {
-    NONE:0, ENTER:1, UP:2, DOWN:3, LEFT:4,RIGHT:5,ESC:99,
+    NONE:0, ENTER:1, UP:2, DOWN:3, LEFT:4,RIGHT:5,BACKSPACE:6,ESC:99,
     COLS:[D2,D47,D45,D43,D10,D9,D36,D11,D24,D22,D20,D8],
     ROWS:[D6,D17,D32,D38],
     keystate:new Uint8Array(48),
@@ -58,6 +58,9 @@ global.KEYBOARD = {
         var actcode = 0;
         if (this.repeat && e==0) this.repeat = clearInterval(this.repeat);
         switch(k) {
+            case 11:
+                if (e==1) actcode = this.BACKSPACE;
+                break;
             case 12:
                 if (e==1) actcode = this.ESC;
                 break;
