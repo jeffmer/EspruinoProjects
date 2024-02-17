@@ -50,6 +50,7 @@ var EDITOR = {
         this.lines[this.row] = line.slice(0,this.col+1);
         this.lines.splice(this.row+1,0,line.slice(this.col+1,));
         this.total = this.lines.length;
+        this.col = -1;
         this.adjrow(1);
     },
 
@@ -64,12 +65,14 @@ var EDITOR = {
                 this.lines[this.row-1]=this.lines[this.row-1] + line;
                 this.lines.splice(this.row,1);
                 this.total = this.lines.length;
+                this.adjcol(-1);
                 this.adjrow(-1);
            }          
         } else if (this.row>0){
             this.col = this.lines[this.row-1].length;
             this.lines.splice(this.row,1);
             this.total = this.lines.length;
+            this.adjcol(-1);
             this.adjrow(-1);
         }    
     },
@@ -106,16 +109,23 @@ var EDITOR = {
     }
 }
 
-function exit_editor() {
-    E.showPrompt("Exit Editor", {buttons: {"Save&Exit":0,"Exit":1,"Cancel":2}}).then(function(v) {
-      if (v==0) load("launch.js");
-      else if (v==1) {console.log("save file and exit"); load("launch.js");}
-      else {
+function exec(){
+    eval(EDITOR.lines.join("\n"));
+}
+
+function save(){
+    STOR.write(EDITOR.filename,EDITOR.lines.join("\n"));
+}
+
+function command() {
+    E.showPrompt("Command", {buttons: {"Exit":0,"Save":1,"Run":2,"Cancel":3}}).then(function(v) {
+        if (v==0) load("launch.js");
+        else if (v==1) save();
+        else if (v==2) exec();
         P2.setUI("arrows",(v)=>{
             move(v);
         });
         EDITOR.draw();
-      }
     });
 }
 
@@ -128,7 +138,7 @@ function move(v){
       case KEYBOARD.DOWN: EDITOR.adjrow(1); break;
       case KEYBOARD.LEFT: EDITOR.adjcol(-1);break;
       case KEYBOARD.RIGHT:EDITOR.adjcol(1); break;
-      case KEYBOARD.ESC:exit_editor();return;
+      case KEYBOARD.ESC:command();return;
     }
     EDITOR.draw();
 }
