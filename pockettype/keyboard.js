@@ -114,7 +114,7 @@ global.KEYBOARD = {
                   if (this.toConsole){
                     if (this.device) this.device.inject(c);
                   } else {
-                    this.emit("key",{act:actcode,char:c});
+                    this.emit("key",{act:actcode,char:c,mod:this.modifiers});
                   }
             }
         }

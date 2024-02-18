@@ -128,14 +128,15 @@ function command() {
 }
 
 function move(v){
+    var shift = v.mod & kb.MODIFY.SHIFT;
     switch(v.act){
       case KEYBOARD.NONE: EDITOR.addChar(v.char);break;
       case KEYBOARD.BACKSPACE: EDITOR.delChar();break;
       case KEYBOARD.ENTER: EDITOR.insertLine();break;
-      case KEYBOARD.UP:   EDITOR.adjrow(-1); break;
-      case KEYBOARD.DOWN: EDITOR.adjrow(1); break;
-      case KEYBOARD.LEFT: EDITOR.adjcol(-1);break;
-      case KEYBOARD.RIGHT:EDITOR.adjcol(1); break;
+      case KEYBOARD.UP:  EDITOR.adjrow(shift?-15:-1); break;
+      case KEYBOARD.DOWN: EDITOR.adjrow(shift?15:1); break;
+      case KEYBOARD.LEFT: EDITOR.adjcol(shift?-40:-1);break;
+      case KEYBOARD.RIGHT:EDITOR.adjcol(shift?40:1); break;
       case KEYBOARD.ESC:command();return;
     }
     EDITOR.draw();
