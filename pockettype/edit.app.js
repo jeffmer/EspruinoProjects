@@ -93,6 +93,7 @@ var EDITOR = {
         var curschar = this.col<this.lines[this.row].length? this.lines[this.row].charAt(this.col):" ";
         for (var i =0; i<n; i++) {
             var ll = this.lines[this.toprow+i];
+            if (typeof ll === "undefined") break;
             g.drawString(ll.slice(bs,es),2,i*8);
             if (es<ll.length) g.fillRect(248,i*8+2,249,i*8+6);
             if (i==cursrow){
