@@ -33,12 +33,12 @@ var EDITOR = {
             {this.toprow = this.row-this.maxrow+1;}
         this.adjcol(0);
     },
-    // this.col = -1 is beginning of line
+    // this.col = 0 is beginning of line
     adjcol:function(v){
         var c = this.col+v;
         var max = this.lines[this.row].length;
-        if (max == 0 ) this.col = -1;
-        else this.col = c<-1 ? -1 : c>=max ? max-1 : c;
+        if (max == 0 ) this.col = 0;
+        else this.col = c<0 ? 0: c>max ? max: c;
         if(this.col<this.leftcol) 
             {this.leftcol = this.col<0 ? 0 :this.col;}
         else if (this.col >= this.leftcol+this.maxcol)
@@ -47,32 +47,30 @@ var EDITOR = {
 
     insertLine:function(){
         var line = this.lines[this.row];
-        this.lines[this.row] = line.slice(0,this.col+1);
-        this.lines.splice(this.row+1,0,line.slice(this.col+1,));
+        this.lines[this.row] = line.slice(0,this.col);
+        this.lines.splice(this.row+1,0,line.slice(this.col));
         this.total = this.lines.length;
-        this.col = -1;
+        this.col = 0;
         this.adjrow(1);
     },
 
     delChar:function(){
         var line = this.lines[this.row];
         if (line.length) {
-           if (this.col>=0){
-            this.lines[this.row] = line.slice(0,this.col) + line.slice(this.col+1);
+           if (this.col>0){
+            this.lines[this.row] = line.slice(0,this.col-1) + line.slice(this.col);
             this.adjcol(-1)  
            } else if (this.row>0) {
                 this.col = this.lines[this.row-1].length;
                 this.lines[this.row-1]=this.lines[this.row-1] + line;
                 this.lines.splice(this.row,1);
                 this.total = this.lines.length;
-                this.adjcol(-1);
                 this.adjrow(-1);
            }          
         } else if (this.row>0){
             this.col = this.lines[this.row-1].length;
             this.lines.splice(this.row,1);
             this.total = this.lines.length;
-            this.adjcol(-1);
             this.adjrow(-1);
         }    
     },
@@ -80,7 +78,7 @@ var EDITOR = {
     addChar:function(c){
         if (c=="\0") return;
         var line = this.lines[this.row];
-        this.lines[this.row] = line.slice(0,this.col+1) + c + line.slice(this.col+1);
+        this.lines[this.row] = line.slice(0,this.col) + c + line.slice(this.col);
         this.adjcol(1); 
     },
 
@@ -92,13 +90,13 @@ var EDITOR = {
         var es = this.leftcol+this.maxcol;
         var cursrow = this.row-this.toprow;
         var curscol = this.col-this.leftcol;
-        var curschar = this.col>=0 ? this.lines[this.row].charAt(this.col):" ";
+        var curschar = this.col<this.lines[this.row].length? this.lines[this.row].charAt(this.col):" ";
         for (var i =0; i<n; i++) {
             var ll = this.lines[this.toprow+i];
-            g.drawString(ll.slice(bs,es),6,i*8);
-            if (es<ll.length) g.fillRect(246,i*8+2,249,i*8+6);
+            g.drawString(ll.slice(bs,es),2,i*8);
+            if (es<ll.length) g.fillRect(248,i*8+2,249,i*8+6);
             if (i==cursrow){
-                var x = (curscol+1)*6;
+                var x = (curscol)*6;
                 var y = cursrow*8;
                 g.fillRect(x,y,x+6,y+8).setColor(0).drawString(curschar,x,y);
                 g.setColor(1);
@@ -159,19 +157,13 @@ function init(){
     if (a>b) return 1;
     return 0;
     });
-    function edit_file(fn) {
-        E.showPrompt("Edit\n"+fn+"?", {buttons: {"No":false,"Yes":true}}).then(function(v) {
-          if (v) startEdit(fn,false);
-          else E.showMenu(filesmenu);
-        });
-    }
     const filesmenu = {
         '': { 'title': 'Open File' }
         };
         filesmenu["New File>"] = ()=>startEdit("test.app.js",true);
         if (files.length > 0) {
         files.reduce((menu, file) => {
-            menu[file] = () => {edit_file(file)};
+            menu[file] = () => {startEdit(file,false)};
             return menu;
         }, filesmenu);  
         filesmenu['Exit>'] = ()=>load("launch.js");  
