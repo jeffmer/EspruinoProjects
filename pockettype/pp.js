@@ -1,4 +1,5 @@
-var settings = STOR.readJSON("settings.json",1)||{invert:true, rotated:false};
+var settings = STOR.readJSON("settings.json",1)||{invert:true, rotated:false, timezone:0};
+E.setTimeZone(settings.timezone);
 
 eval(STOR.read("ST7302R.js"))
 

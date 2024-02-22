@@ -14,6 +14,10 @@ if (!E.showAlert) eval(STOR.read("prompt.js"));
         format: () => (settings.rotated ? 'Yes' : 'No'),
         onchange: () => {settings.rotated = !settings.rotated;}
       },
+      "Time Zone" :{ value : settings.timezone,
+                  min:-12,max:12,step:1,
+                  onchange : v => {settings.timezone=v;}
+      },
       'Sync Time':function() {
           if (NRF.ctsIsActive()) {
             E.showMessage("Syncing time with iPhone",{title:"settings"});
