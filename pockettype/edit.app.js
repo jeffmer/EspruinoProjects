@@ -11,7 +11,9 @@ var EDITOR = {
     total:0,
     lines:undefined,
     filename:undefined,
-
+    chunk:{br:2,bc:0,er:4,ec:0},
+    
+    
     open:function(fn){
         this.filename = fn;
         this.lines = STOR.read(fn).split("\n");
@@ -84,11 +86,29 @@ var EDITOR = {
 
     draw:function(){
         function draw_cursor(o,c,r,lls){
-        var y = (r-o.toprow)*8;
+            var y = (r-o.toprow)*8;
             var x = (c-o.leftcol)*6;
             var curschar = c<lls[r].length? lls[r].charAt(c):" ";
             g.fillRect(x,y,x+6,y+8).setColor(0).drawString(curschar,x,y);
             g.setColor(1);
+        }
+        function draw_highline(o,bc,ec,r,lls){
+            if (r<o.toprow) return;
+            else if (r>=o.toprow+o.maxrow) return;
+            else if (ec<o.leftcol) return;
+            else if (bc>=o.leftcol+this.maxcol) return;
+            bc = bc<o.leftcol ? o.leftcol : bc;
+            ec = ec>=o.leftcol+this.maxcol ?o.leftcol+this.maxcol:ec;
+            var y = (r-o.toprow)*8;
+            var x0 = (bc-o.leftcol)*6;
+            var x1 = (ec-o.leftcol)*6;
+            g.fillRect(x0,y,x1,y+8).setColor(0).drawString(lls[r].slice(bc,ec),x0,y);
+            g.setColor(1);        
+        }
+        function draw_highlight(o,p,lls){
+            for (var r = p.br; r<=p.er; r++){
+                draw_highline(o,r==p.br?p.bc:0,r==p.er?p.ec:lls[r].length,r,lls);
+            }
         }
         g.clear();
         g.setColor(1).setFont("6x8").setFontAlign(-1,-1);
@@ -102,6 +122,7 @@ var EDITOR = {
             if (es<ll.length) g.fillRect(248,i*8+2,249,i*8+6); 
         } 
         draw_cursor(this,this.col,this.row,this.lines);
+        draw_highlight(this,this.chunk,this.lines);
         g.flip(); 
         this.dirty = false;
     }
