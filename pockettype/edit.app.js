@@ -11,8 +11,17 @@ var EDITOR = {
     total:0,
     lines:undefined,
     filename:undefined,
-    chunk:{br:2,bc:0,er:4,ec:0},
+    chunk:{br:0,bc:0,er:0,ec:0},
+    selecting:false,
+    highlighting:false,
     
+    select(ctrl){
+        if (ctrl && !this.selecting){
+            this.selecting = true;
+            this.highlighting = true;
+            this.chunk = {br:this.row,bc:this.col,er:this.row,ec:this.col};
+        } else if (this.selecting && !ctrl) this.selecting = false;
+    },
     
     open:function(fn){
         this.filename = fn;
@@ -34,6 +43,7 @@ var EDITOR = {
         else if (this.row >= this.toprow+this.maxrow)
             {this.toprow = this.row-this.maxrow+1;}
         this.adjcol(0);
+        if (this.selecting) this.chunk.er = this.row;
     },
     // this.col = 0 is beginning of line
     adjcol:function(v){
@@ -45,6 +55,7 @@ var EDITOR = {
             {this.leftcol = this.col<0 ? 0 :this.col;}
         else if (this.col >= this.leftcol+this.maxcol)
             {this.leftcol = this.col-this.maxcol+1;}
+        if (this.selecting) this.chunk.ec = this.col;
     },
 
     insertLine:function(){
@@ -122,7 +133,7 @@ var EDITOR = {
             if (es<ll.length) g.fillRect(248,i*8+2,249,i*8+6); 
         } 
         draw_cursor(this,this.col,this.row,this.lines);
-        draw_highlight(this,this.chunk,this.lines);
+        if (this.highlighting) draw_highlight(this,this.chunk,this.lines);
         g.flip(); 
         this.dirty = false;
     }
@@ -150,6 +161,7 @@ function command() {
 
 function move(v){
     var shift = v.mod & kb.MODIFY.SHIFT;
+    EDITOR.select(v.mod & kb.MODIFY.CTRL);
     switch(v.act){
       case KEYBOARD.NONE: EDITOR.addChar(v.char);break;
       case KEYBOARD.BACKSPACE: EDITOR.delChar();break;
