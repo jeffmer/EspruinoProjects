@@ -109,3 +109,15 @@ E.showMessage = function(msg,options) {
   g.flip(); // force immediate show of message
   g.setColor(g.theme.fg).setBgColor(g.theme.bg);
 }
+
+function ctsUpdate(e){
+  var tz = 0;
+  if (e.timezone!==undefined) {
+    E.setTimeZone(e.timezone);
+    tz = e.timezone*3600;
+    var settings = STOR.readJSON('settings.json',1)||{};
+    settings.timezone = e.timezone;
+    STOR.writeJSON('settings.json',settings);
+  }
+  setTime((e.date.getTime()/1000) - tz);
+}

@@ -20,11 +20,14 @@ if (!E.showAlert) eval(STOR.read("prompt.js"));
       },
       'Sync Time':function() {
           if (NRF.ctsIsActive()) {
+            E.setConsole(Terminal);
             E.showMessage("Syncing time with iPhone",{title:"settings"});
             NRF.ctsGetTime().then(function(e){
               ctsUpdate(e);
               load("clock.app.js");
-            });
+            }).catch(function(e){           
+                 E.showMessage("CTS: "+e,"ERROR");
+             });
           } else  
           E.showMessage("CTS SErvice not Active",{title:"settings"});
       },

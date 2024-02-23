@@ -7,7 +7,7 @@ var EDITOR = {
     maxrow:15,
     maxcol:40,
     row:0,
-    col:-1,
+    col:0,
     total:0,
     lines:undefined,
     filename:undefined,
@@ -83,26 +83,25 @@ var EDITOR = {
     },
 
     draw:function(){
+        function draw_cursor(o,c,r,lls){
+        var y = (r-o.toprow)*8;
+            var x = (c-o.leftcol)*6;
+            var curschar = c<lls[r].length? lls[r].charAt(c):" ";
+            g.fillRect(x,y,x+6,y+8).setColor(0).drawString(curschar,x,y);
+            g.setColor(1);
+        }
         g.clear();
         g.setColor(1).setFont("6x8").setFontAlign(-1,-1);
         var n = this.total > this.maxrow ? this.maxrow : this.total;
         var bs = this.leftcol;
         var es = this.leftcol+this.maxcol;
-        var cursrow = this.row-this.toprow;
-        var curscol = this.col-this.leftcol;
-        var curschar = this.col<this.lines[this.row].length? this.lines[this.row].charAt(this.col):" ";
         for (var i =0; i<n; i++) {
-            var ll = this.lines[this.toprow+i];
+            var ll = this.lines[this.toprow+i]; 
             if (typeof ll === "undefined") break;
             g.drawString(ll.slice(bs,es),2,i*8);
-            if (es<ll.length) g.fillRect(248,i*8+2,249,i*8+6);
-            if (i==cursrow){
-                var x = (curscol)*6;
-                var y = cursrow*8;
-                g.fillRect(x,y,x+6,y+8).setColor(0).drawString(curschar,x,y);
-                g.setColor(1);
-            }
-        }   
+            if (es<ll.length) g.fillRect(248,i*8+2,249,i*8+6); 
+        } 
+        draw_cursor(this,this.col,this.row,this.lines);
         g.flip(); 
         this.dirty = false;
     }
@@ -141,7 +140,7 @@ function move(v){
       case KEYBOARD.ESC:command();return;
     }
     EDITOR.draw();
-}
+h}
 
 function startEdit(fn,nf){
     P2.setUI("arrows",(v)=>{
