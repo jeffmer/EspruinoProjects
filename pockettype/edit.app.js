@@ -11,16 +11,68 @@ var EDITOR = {
     total:0,
     lines:undefined,
     filename:undefined,
-    chunk:{br:0,bc:0,er:0,ec:0},
+    chunk:undefined,
     selecting:false,
-    highlighting:false,
+    clipboard:undefined,
     
-    select(ctrl){
+    select:function(ctrl){
         if (ctrl && !this.selecting){
             this.selecting = true;
-            this.highlighting = true;
             this.chunk = {br:this.row,bc:this.col,er:this.row,ec:this.col};
         } else if (this.selecting && !ctrl) this.selecting = false;
+    },
+    
+    ctrlChar:function(c){
+        if (c=="x") this.cut();
+        else if (c=="v") this.paste();
+        else if (c=="c") this.copy();
+    },
+    
+    copy:function(){
+        var p = this.chunk;
+        var lls = this.lines;
+        var clip = [];
+        for (var r=p.br;r<=p.er;r++){
+            clip.push(lls[r].slice(r==p.br?p.bc:0, r==p.er?p.ec:lls[r].length));
+        }
+        this.clipboard = clip;
+    },
+
+    del:function(){
+        var p = this.chunk;
+        var lls = this.lines;
+        this.row = p.br;
+        this.col = p.bc;
+        if (p.br == p.er) 
+            lls[p.br] = lls[p.br].slice(0,p.bc) + lls[p.br].slice(p.ec);
+        else {
+            if (p.bc>0) lls[p.br] = lls[p.br].slice(0,p.bc);
+            else p.br-=1;
+            lls[p.er] = lls[p.er].slice(p.ec);
+            if (p.br+1<p.er)
+                lls.splice(p.br+1,p.er-p.br-1);
+        }
+        this.adjrow(0);
+        this.adjcol(0);
+        delete this.chunk;
+        this.selecting=false;
+    },
+
+    cut:function(){
+        this.copy();
+        this.del();
+    },
+
+    paste:function(){
+        var cb = this.clipboard;
+        if (!cb) return;
+        var lls = this.lines;
+        var r = this.row;
+        var c = this.col;
+        if (cb.length == 1){
+            lls[r] = lls[r].slice(0,c) + cb[0] + lls[r].slice(c);
+            this.adjcol(cb[0].length);
+        }
     },
     
     open:function(fn){
@@ -133,7 +185,7 @@ var EDITOR = {
             if (es<ll.length) g.fillRect(248,i*8+2,249,i*8+6); 
         } 
         draw_cursor(this,this.col,this.row,this.lines);
-        if (this.highlighting) draw_highlight(this,this.chunk,this.lines);
+        if (this.chunk) draw_highlight(this,this.chunk,this.lines);
         g.flip(); 
         this.dirty = false;
     }
@@ -161,15 +213,21 @@ function command() {
 
 function move(v){
     var shift = v.mod & kb.MODIFY.SHIFT;
-    EDITOR.select(v.mod & kb.MODIFY.CTRL);
+    var ctrl = v.mod & kb.MODIFY.CTRL;  
     switch(v.act){
-      case KEYBOARD.NONE: EDITOR.addChar(v.char);break;
+      case KEYBOARD.NONE: if (!ctrl) EDITOR.addChar(v.char);
+                          else EDITOR.ctrlChar(v.char);
+                          break;
       case KEYBOARD.BACKSPACE: EDITOR.delChar();break;
       case KEYBOARD.ENTER: EDITOR.insertLine();break;
-      case KEYBOARD.UP:  EDITOR.adjrow(shift?-15:-1); break;
-      case KEYBOARD.DOWN: EDITOR.adjrow(shift?15:1); break;
-      case KEYBOARD.LEFT: EDITOR.adjcol(shift?-40:-1);break;
-      case KEYBOARD.RIGHT:EDITOR.adjcol(shift?40:1); break;
+      case KEYBOARD.UP: EDITOR.select(ctrl); 
+                        EDITOR.adjrow(shift?-15:-1); break;
+      case KEYBOARD.DOWN: EDITOR.select(ctrl);
+                          EDITOR.adjrow(shift?15:1); break;
+      case KEYBOARD.LEFT: EDITOR.select(ctrl); 
+                          EDITOR.adjcol(shift?-40:-1);break;
+      case KEYBOARD.RIGHT:EDITOR.select(ctrl);
+                          EDITOR.adjcol(shift?40:1); break;
       case KEYBOARD.ESC:command();return;
     }
     EDITOR.draw();
