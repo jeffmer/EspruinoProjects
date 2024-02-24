@@ -36,6 +36,7 @@ var EDITOR = {
             clip.push(lls[r].slice(r==p.br?p.bc:0, r==p.er?p.ec:lls[r].length));
         }
         this.clipboard = clip;
+        delete this.chunk;
     },
 
     del:function(){
@@ -54,8 +55,6 @@ var EDITOR = {
         }
         this.adjrow(0);
         this.adjcol(0);
-        delete this.chunk;
-        this.selecting=false;
     },
 
     cut:function(){
@@ -72,6 +71,15 @@ var EDITOR = {
         if (cb.length == 1){
             lls[r] = lls[r].slice(0,c) + cb[0] + lls[r].slice(c);
             this.adjcol(cb[0].length);
+        } else {
+            var temp = lls[r].slice(c);
+            lls[r] = lls[r].slice(0,c) + cb[0];
+            lls[r+1] = cb[cb.length-1] + temp;
+            for (var i = 1; i<cb.length-1; i++){
+                lls.splice(r+i,0,cb[i]);
+            }
+            this.adjrow(cb.length-1);
+            this.adjcol(cb[cb.length-1].length);
         }
     },
     
@@ -95,7 +103,7 @@ var EDITOR = {
         else if (this.row >= this.toprow+this.maxrow)
             {this.toprow = this.row-this.maxrow+1;}
         this.adjcol(0);
-        if (this.selecting) this.chunk.er = this.row;
+        if (this.chunk && this.selecting) this.chunk.er = this.row;
     },
     // this.col = 0 is beginning of line
     adjcol:function(v){
@@ -107,7 +115,7 @@ var EDITOR = {
             {this.leftcol = this.col<0 ? 0 :this.col;}
         else if (this.col >= this.leftcol+this.maxcol)
             {this.leftcol = this.col-this.maxcol+1;}
-        if (this.selecting) this.chunk.ec = this.col;
+            if (this.chunk && this.selecting) this.chunk.ec = this.col;
     },
 
     insertLine:function(){
