@@ -36,7 +36,7 @@ var EDITOR = {
             clip.push(lls[r].slice(r==p.br?p.bc:0, r==p.er?p.ec:lls[r].length));
         }
         this.clipboard = clip;
-        delete this.chunk;
+        this.selecting = false;
     },
 
     del:function(){
@@ -53,6 +53,8 @@ var EDITOR = {
             if (p.br+1<p.er)
                 lls.splice(p.br+1,p.er-p.br-1);
         }
+        delete this.chunk;
+        this.selecting = false;
         this.adjrow(0);
         this.adjcol(0);
     },
@@ -72,12 +74,13 @@ var EDITOR = {
             lls[r] = lls[r].slice(0,c) + cb[0] + lls[r].slice(c);
             this.adjcol(cb[0].length);
         } else {
-            var temp = lls[r].slice(c);
+            var temp = cb[cb.length-1]+lls[r].slice(c);
             lls[r] = lls[r].slice(0,c) + cb[0];
-            lls[r+1] = cb[cb.length-1] + temp;
+            lls.splice(r+1,0,temp);
             for (var i = 1; i<cb.length-1; i++){
                 lls.splice(r+i,0,cb[i]);
             }
+            this.total = lls.length;
             this.adjrow(cb.length-1);
             this.adjcol(cb[cb.length-1].length);
         }
@@ -193,7 +196,7 @@ var EDITOR = {
             if (es<ll.length) g.fillRect(248,i*8+2,249,i*8+6); 
         } 
         draw_cursor(this,this.col,this.row,this.lines);
-        if (this.chunk) draw_highlight(this,this.chunk,this.lines);
+        if (this.chunk && this.selecting) draw_highlight(this,this.chunk,this.lines);
         g.flip(); 
         this.dirty = false;
     }
