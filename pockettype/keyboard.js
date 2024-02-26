@@ -22,10 +22,10 @@ KEYMAP[1] = new Uint8Array([
 ]);
 
 var ASCII = [
-   "\x09qwertyuiop\x08\x1Basdfghjkl;\'\0zxcvbnm,./\r\0\0\0\0\0  \0\0\0\0\0",
-   "\x09QWERTYUIOP\x08\x1BASDFGHJKL:\"\0ZXCVBNM<>?\r\0\0\0\0\0  \0\0\0\0\0",
-   "\`1234567890\x08\0\0\0\0\0\0\0-=[]\\\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0",
-   "~!@#$%^&*()\x08\0\0\0\0\0\0\0_+{}|\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0",
+   "\x09qwertyuiop\x08\x1Basdfghjkl;\' zxcvbnm,./\r            ",
+   "\x09QWERTYUIOP\x08\x1BASDFGHJKL:\" ZXCVBNM<>?\r            ",
+   "\`1234567890\x08       -=[]\\                       ",
+   "~!@#$%^&*()\x08       _+{}|                       ",
 ];
 
 global.KEYBOARD = {
@@ -84,19 +84,19 @@ global.KEYBOARD = {
                 return;
             case 44:
                 if (e>0) actcode = this.LEFT;
-                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.LEFT,char:"\0"}),350);
+                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.LEFT,char:" "}),350);
                 break;
             case 45:
                 if (e>0) actcode = this.DOWN;
-                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.DOWN,char:"\0"}),350);
+                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.DOWN,char:" "}),350);
                 break;
             case 46:
                 if (e>0) actcode = this.UP;
-                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.UP,char:"\0"}),350);
+                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.UP,char:" "}),350);
                 break;
             case 47:
                 if (e>0) actcode = this.RIGHT;
-                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.RIGHT,char:"\0"}),350);
+                if (e==2) this.repeat = setInterval(()=>KEYBOARD.emit("key",{act:KEYBOARD.RIGHT,char:" "}),350);
                 break; 
         } 
         if (e==2) return;

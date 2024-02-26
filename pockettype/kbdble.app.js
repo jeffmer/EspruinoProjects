@@ -17,7 +17,32 @@ NRF.on("disconnect", function(a){
     g.flip();
 });
 
-g.clear().setFont("Vector",24).setFontAlign(0,0).drawString("Bluetooth Keyboard",125,60).flip();
+// Test App
+
+require("FontVGA16").add(Graphics);
+
+function keys(s){
+  var ks = "";
+  for(var i=0;i<s.length;i++){
+    ks = ks + s.charAt(i) + " ";
+  }
+  return ks;
+}
+
+function draw(w,o,x,y){
+ w.setFont("VGA16",1)
+ .setFontAlign(-1,-1)
+ .drawString(keys(ASCII[3].slice(o,o+12)),x,y)
+ .drawString(keys(ASCII[2].slice(o,o+12)),x,y+20)
+ .drawString(keys(ASCII[0].slice(o,o+12)),x,y+40)
+ .flip();
+}
+
+g.clear().setFont("Vector",24).setFontAlign(0,-1).drawString("Bluetooth Keyboard",125,10);
+draw(g,0,40,50);
+h.clear();
+draw(h,12,40,35);
+
 
 if (NRF.getSecurityStatus().connected) NRF.disconnect();
 

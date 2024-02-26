@@ -211,7 +211,7 @@ function save(){
 }
 
 function command() {
-    E.showPrompt("Command", {buttons: {"Exit":0,"Save":1,"Run":2,"Cancel":3}}).then(function(v) {
+    E.showPrompt(EDITOR.filename, {title:"EDITOR",buttons: {"Exit":0,"Save":1,"Run":2,"Cancel":3}}).then(function(v) {
         if (v==0) load("launch.js");
         else if (v==1) save();
         else if (v==2) exec();
