@@ -83,7 +83,7 @@ P2.setUI = function(mode, cb) {
     KEYBOARD.on("key",cb);
 }
 
-P2.setUI();
+P2.setUI("leftright",()=>{});
 
 E.showMessage = function(msg,options) {
   if ("string" == typeof options)

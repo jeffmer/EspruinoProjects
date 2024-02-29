@@ -48,7 +48,7 @@ function drawClock(){
   drawBat(E.getBattery());
   if (E.charging) drawCharging();
   if (NRF.getSecurityStatus().connected) drawBlue();
-  if (NRF.ancsIsActive()) drawANCS();
+  if (NRF.ancsIsActive()) {drawANCS();E.setConsole(Terminal);}
   if (P2.alarmset) drawAlarm();
   g.flip();
 }
