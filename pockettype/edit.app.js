@@ -92,6 +92,11 @@ var EDITOR = {
         if (this.lines) this.total = this.lines.length;
     },
 
+    insert:function(fn){
+        this.clipboard = STOR.read(fn).split("\n");
+        this.paste();
+    },
+
     create:function(fn){
         this.filename = fn;
         this.lines = [""];
@@ -222,6 +227,27 @@ function command() {
     });
 }
 
+function saveclip(){
+  if(EDITOR.clipboard)
+    STOR.write("clipboard.txt",EDITOR.clipboard.join("\n"));
+}
+
+function insertclip(){
+    EDITOR.insert("clipboard.txt");
+}
+
+function clip() {
+    E.showPrompt("Clipboard", {title:"EDITOR",buttons: {"Save":0,"Insert":1,"Cancel":2}}).then(function(v) {
+        if (v==0) saveclip();
+        else if (v==1) insertclip();
+        P2.setUI("arrows",(v)=>{
+            move(v);
+        });
+        EDITOR.draw();
+    });
+}
+
+
 function move(v){
     var shift = v.mod & kb.MODIFY.SHIFT;
     var ctrl = v.mod & kb.MODIFY.CTRL;  
@@ -239,7 +265,7 @@ function move(v){
                           EDITOR.adjcol(shift?-40:-1);break;
       case KEYBOARD.RIGHT:EDITOR.select(ctrl);
                           EDITOR.adjcol(shift?40:1); break;
-      case KEYBOARD.ESC:command();return;
+      case KEYBOARD.ESC:if(shift) clip(); else command();return;
     }
     EDITOR.draw();
 h}
