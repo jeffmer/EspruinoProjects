@@ -1,6 +1,7 @@
 if (!P2.setUI) eval(STOR.read("setui.js"));
 
 E.showPrompt = function(msg,options) {
+    var g = h;
     if (!options) options={};
     if (!options.buttons)
       options.buttons = {"Yes":true,"No":false};

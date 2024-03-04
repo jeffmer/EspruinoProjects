@@ -86,6 +86,7 @@ P2.setUI = function(mode, cb) {
 P2.setUI("leftright",()=>{});
 
 E.showMessage = function(msg,options) {
+  var g = h;
   if ("string" == typeof options)
     options = { title : options };
   options = options||{};
