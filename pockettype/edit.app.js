@@ -136,6 +136,10 @@ var EDITOR = {
     },
 
     delChar:function(){
+        if (this.chunk){
+            this.del();
+            return;
+        }
         var line = this.lines[this.row];
         if (line.length) {
            if (this.col>0){
