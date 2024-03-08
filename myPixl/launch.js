@@ -23,7 +23,7 @@ var Napps = apps.length;
 var SELECTED = 0;
 var Wstart = 0;
 const XOFF = 5;
-const YOFF = 45;
+const YOFF = 40;
 const CELL = 60;
 
 function draw_icon(p,n,selected) {
@@ -37,6 +37,17 @@ function draw_icon(p,n,selected) {
     if (selected) g.drawRect(x,y,x+CELL-1,y+CELL-1);
 }
 
+function drawPage(){
+    var np = Math.ceil(apps.length/4);
+    var p =  Math.floor(SELECTED/4);
+    var O = 125-12*(np/2);
+    for (var j=0;j<np;j++){
+        var x = O+j*12;
+        g.setColor(g.theme.fg);
+        if (j==p) g.fillCircle(x,110,4);
+        else g.drawCircle(x,110,4);
+    }
+}
 
 function drawAll(){
   g.clear();
@@ -45,19 +56,20 @@ function drawAll(){
   else if (SELECTED<Wstart) Wstart-=(Wstart-SELECTED);
   for (var i=0;i<4;++i)
     draw_icon(i,i+Wstart,SELECTED==(i+Wstart));
+  drawPage();
   g.flip();
 }
+
+function mod(a,n){return a>=n?a-n:a<0?a+n:a;}
 
 P2.setUI("leftright",(v)=>{
   if (SELECTED<0) SELECTED=0;
   if (v) {
-    SELECTED+=v;
-    SELECTED = SELECTED<0?0:SELECTED>=Napps?Napps-1:SELECTED;
+    SELECTED = mod(SELECTED+v,apps.length);
     drawAll();
   }
   else if (SELECTED>=0) load(apps[SELECTED]+".app.js");
 });
-
 
 drawAll();
 
