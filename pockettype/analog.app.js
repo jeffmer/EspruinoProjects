@@ -1,4 +1,8 @@
 
+function drawBlue(){
+  h.drawImage(atob("CxQBBgDgFgJgR4jZMawfAcA4D4NYybEYIwTAsBwDAA=="), 4, 100);
+}
+
 function drawBat(g,v){
   var s = 39;
   x = g.getWidth()-44; y = 2;
@@ -40,6 +44,7 @@ function onSecond(notfirst) {
             hh(minuteDate.getHours()*30 + minuteDate.getMinutes()/2);
             mh(minuteDate.getMinutes()*6);
             minuteDate = new Date();
+            drawClock(minuteDate);
         }
         g.setColor(g.theme.fg);
         hh(minuteDate.getHours()*30 + minuteDate.getMinutes()/2);
@@ -49,6 +54,36 @@ function onSecond(notfirst) {
         g.fillCircle(cx, cy, 4);
         g.flip();
     }
+
+NRF.on("connect", function(a){
+  drawBlue();
+  h.flip();
+});
+  
+NRF.on("disconnect", function(a){
+  h.clearRect(4,100,20,120);
+  h.flip();
+});
+
+function drawClock(now){
+  var g = h; var W = 250; var H = 122;
+  d=now.toString().split(' ');
+  var min=d[4].substr(3,2);
+  var sec=d[4].substr(-2);
+  var tm=d[4].substring(0,5);
+  var hr=d[4].substr(0,2);
+  lastmin=min;
+  g.clearRect(0,0,W-1,H-1);
+  g.setFontAlign(0,0);
+  g.setFontVector(48);
+  g.drawString(tm,W/2,H/2-6);
+  g.setFontVector(24);
+  g.setColor(g.theme.fg2); 
+  var dt=d[0]+" "+d[2]+" "+d[1];//+" "+d[3];
+  g.drawString(dt,W/2,H/2+28);
+  if (NRF.getSecurityStatus().connected) drawBlue();
+  g.flip();
+}
 
 function drawWidgets(){
   g.clearRect(0,0,50,30);
@@ -71,4 +106,3 @@ function draw(g){
 draw(g);
 setInterval(onSecond,1000);
 setInterval(drawWidgets,30000);
-E.on("kill",()=>{g.invert(false);g.invert(false);});
