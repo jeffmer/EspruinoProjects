@@ -219,11 +219,23 @@ function save(){
     STOR.write(EDITOR.filename,EDITOR.lines.join("\n"));
 }
 
+var isedit = (typeof NOTEPAD === "undefined");
+
 function command() {
-    E.showPrompt(EDITOR.filename, {title:"EDITOR",buttons: {"Exit":0,"Save":1,"Run":2,"Cancel":3}}).then(function(v) {
-        if (v==0) load("launch.js");
-        else if (v==1) save();
-        else if (v==2) exec();
+  if (isedit)
+    E.showPrompt(EDITOR.filename, {title:"Editor",buttons: {"Cancel":0, "Exit":1,"Save":2,"Run":3}}).then(function(v) {
+        if (v==1) load("launch.js");
+        else if (v==2) save();
+        else if (v==3) exec();
+        P2.setUI("arrows",(v)=>{
+            move(v);
+        });
+        EDITOR.draw();
+    });
+  else
+    E.showPrompt(EDITOR.filename, {title:"NotePad",buttons: {"Cancel":0, "Exit":1,"Save":2}}).then(function(v) {
+        if (v==1) load("launch.js");
+        else if (v==2) save();
         P2.setUI("arrows",(v)=>{
             move(v);
         });
@@ -272,7 +284,7 @@ function move(v){
       case KEYBOARD.ESC:if(shift) clip(); else command();return;
     }
     EDITOR.draw();
-}
+h}
 
 function startEdit(fn,nf){
     P2.setUI("arrows",(v)=>{
@@ -283,8 +295,8 @@ function startEdit(fn,nf){
     EDITOR.draw();
 }
 
-function init(){
-    var files = STOR.list(/\.js$/);
+function init(js){
+    var files = js ? STOR.list(/\.js$/):STOR.list(/\.txt$/);
     files.sort((a,b)=>{
     if (a<b) return -1;
     if (a>b) return 1;
@@ -293,7 +305,7 @@ function init(){
     const filesmenu = {
         '': { 'title': 'Open File' }
         };
-        filesmenu["New File>"] = ()=>startEdit("test.app.js",true);
+        filesmenu["New File>"] = ()=>startEdit(js?"test.app.js":"note.txt",true);
         if (files.length > 0) {
         files.reduce((menu, file) => {
             menu[file] = () => {startEdit(file,false)};
@@ -304,5 +316,5 @@ function init(){
     E.showMenu(filesmenu);
 }
 
-init();
+init(isedit);
 
