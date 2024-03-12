@@ -71,4 +71,4 @@ function draw(g){
 draw(g);
 setInterval(onSecond,1000);
 setInterval(drawWidgets,30000);
-E.on("kill",()=>{g.invert(false);g.invert(false);});
+

@@ -136,7 +136,7 @@ var EDITOR = {
     },
 
     delChar:function(){
-        if (this.chunk){
+        if (this.chunk && this.selecting){
             this.del();
             return;
         }
@@ -272,7 +272,7 @@ function move(v){
       case KEYBOARD.ESC:if(shift) clip(); else command();return;
     }
     EDITOR.draw();
-h}
+}
 
 function startEdit(fn,nf){
     P2.setUI("arrows",(v)=>{
