@@ -1,3 +1,4 @@
+eval (STOR.read("gettext.js"));
 eval(STOR.read("menu.js"));
 if (!E.showPrompt) eval(STOR.read("prompt.js"));
 
@@ -305,7 +306,9 @@ function init(js){
     const filesmenu = {
         '': { 'title': 'Open File' }
         };
-        filesmenu["New File>"] = ()=>startEdit(js?"test.app.js":"note.txt",true);
+        filesmenu["New File>"] = ()=>{
+            E.getText("Enter File Name:","New File").then((s)=>startEdit(js?s+".app.js":s+".txt",true));
+        }
         if (files.length > 0) {
         files.reduce((menu, file) => {
             menu[file] = () => {startEdit(file,false)};
