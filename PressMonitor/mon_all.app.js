@@ -11,6 +11,7 @@ var g = require("ST7302").connect({
 eval(STOR.read("scd41.js"));
 eval(STOR.read("bme280.js"));
 eval(STOR.read("trend.js"));
+eval(STOR.read("zambretti.js"));
 
 var W = g.getWidth();
 var H = g.getHeight();
@@ -21,6 +22,8 @@ var Temp = new Trend("Temp","C",10,30);
 var Press = new Trend("Press","hPa",970,1050,10);
 var PressD = new Trend("PressD","hPa",970,1050,10);
 PressD.days = true;
+
+var weather = "Waiting for Forecast";
 
 E.on("kill",function(){
   CO2.save();
@@ -96,11 +99,11 @@ function oneShot(){
     if(SCD41.dataready()) READING = SCD41.readMeas();
     updateBT(READING,PREADING);
     end_flash();
-    var co2 = READING.co2
+    var co2 = READING.co2;
     if (co2>1000 && co2<1200 )
-      start_flash(LED2,LED2);
+      ;//start_flash(LED2,LED2);
     else if (co2>=1200 && co2 <1400)
-      start_flash(LED2,LED1);
+      ;//start_flash(LED2,LED1);
     else if (co2>1400)
       start_flash(LED1,LED1);
   },5000);
@@ -111,7 +114,10 @@ function record(){
   Humd.record(READING.humid);
   Temp.record(READING.temp);
   Press.record(PREADING.pressure);
-  if (cycle==0) PressD.record(PREADING.pressure);
+  if (cycle==0) {
+    PressD.record(PREADING.pressure);
+    weather = zambretti(PressD.trend(),PREADING.pressure);
+  }
   cycle = (cycle+1)%6;
 } 
 
@@ -139,6 +145,7 @@ function drawDisp(){
   if (connected) drawBlue();
   g.fillRect(W/2-7,30,W/2-5,106);
   drawReading(W/2,30);
+  g.setFontAlign(-1,-1).setFont("6x8",1).drawString(weather,10,110);
   g.flip();
 }
 
@@ -163,7 +170,6 @@ E.on("charging",function(v){
 });
 
 E.on("kill",function(){SCD41.stopMeas();});
-
 
 BME280.init();
 SCD41.setTempOffset(0.5);
@@ -198,4 +204,3 @@ setWatch(function(){
   tdisp = (tdisp+1) % 6;
   doDisp(tdisp);
 },BTN1,{repeat:true,edge:"falling"});
-
