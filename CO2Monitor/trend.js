@@ -58,8 +58,9 @@ class Trend {
     }
 
     trend(){
-        var current = Math.round(this.values[this.next+143]/this.dim);
-        var prev = Math.round(this.values[this.next+142]/this.dim);
+        var current = this.values[(this.next+143)%144];
+        var prev = this.values[(this.next+142)%144];
+        if (Math.abs(current-prev)<3) return 0;
         return current>prev? 1: current<prev ? -1 : 0;
     }
 

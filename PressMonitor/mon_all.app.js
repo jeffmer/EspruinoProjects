@@ -12,6 +12,7 @@ eval(STOR.read("scd41.js"));
 eval(STOR.read("bme280.js"));
 eval(STOR.read("trend.js"));
 eval(STOR.read("zambretti.js"));
+eval(STOR.read("moon.js"));
 
 var W = g.getWidth();
 var H = g.getHeight();
@@ -24,6 +25,8 @@ var PressD = new Trend("PressD","hPa",970,1050,10);
 PressD.days = true;
 
 var weather = "Waiting for Forecast";
+
+var MOON = getmoon();
 
 E.on("kill",function(){
   CO2.save();
@@ -141,6 +144,7 @@ function drawDisp(){
   g.clearRect(0,0,W-1,H-1);
   drawClock(60,H/2-10);
   drawBat(E.getBattery());
+  MOON.draw(W-82,2)
   if (E.charging) drawCharging();
   if (connected) drawBlue();
   g.fillRect(W/2-7,30,W/2-5,106);
