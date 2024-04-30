@@ -2,7 +2,8 @@ D14.reset(); //enable battery voltage read
 D13.reset(); //high charging rate
 
 var STOR = require("Storage");
-var settings = STOR.readJSON("settings.json",1)||{invert:true, rotated:true};
+var settings = STOR.readJSON("settings.json",1)||{invert:true, rotated:true, timezone:0};
+E.setTimeZone(settings.timezone);
 
 SPI1.setup({sck:D2, mosi:D3, baud: 10000000}); 
 
