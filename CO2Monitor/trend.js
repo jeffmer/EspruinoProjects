@@ -57,6 +57,13 @@ class Trend {
         this.next=(this.next+1)%144;
     }
 
+    trend(){
+        var current = this.values[(this.next+143)%144];
+        var prev = this.values[(this.next+142)%144];
+        if (Math.abs(current-prev)<3) return 0;
+        return current>prev? 1: current<prev ? -1 : 0;
+    }
+
     draw(){
         var W = g.getWidth();
         var H = g.getHeight();
