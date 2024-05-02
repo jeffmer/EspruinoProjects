@@ -63,6 +63,7 @@ eval(STOR.read("blink.js"));
 P2.blinker = new Blink([LED1,LED3],1000,200);
 eval(STOR.read("tune.js"));
 P2.sound = new Tune(D5,"abcdefgABCDEFG  ",200);
+eval(STOR.read("pressure.js"));
 
 P2.alarmStart = function(secs){
   if (!secs) secs=10;
@@ -119,3 +120,4 @@ function ctsUpdate(e){
   }
   setTime((e.date.getTime()/1000) - tz);
 }
+

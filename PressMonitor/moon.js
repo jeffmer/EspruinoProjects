@@ -31,6 +31,7 @@ function getmoon(){
     function drawmoon(x,y) {
       mx = x+11; my = y + 11;
       moon[moonPhase()]();
+      g.setColor(1);
     }
   
    return {draw:drawmoon};
