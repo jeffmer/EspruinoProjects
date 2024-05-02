@@ -28,6 +28,10 @@ function drawCharging(){
   g.drawImage(atob("DhgBHOBzgc4HOP////////////////////3/4HgB4AeAHgB4AeAHgB4AeAHg"),W-62,2);
 }
 
+function drawAlarm(){
+  g.drawImage(atob("GBgBAAAAAAAAABgADhhwDDwwGP8YGf+YMf+MM//MM//MA//AA//AA//AA//AA//AA//AB//gD//wD//wAAAAADwAABgAAAAAAAAA"),W/2,2);
+}
+
 function drawReading(x,y){
     g.setFontAlign(-1,-1).setFontVector(16);
     g.drawString("Temp: "+READING.temp.toFixed(1)+"C",x,y);
@@ -55,6 +59,7 @@ function drawDisp(){
   g.clearRect(0,0,W-1,H-1);
   drawClock(60,H/2-10);
   drawBat(E.getBattery());
+  if (P2.alarmset) drawAlarm();
   MOON.draw(W-82,2)
   if (E.charging) drawCharging();
   if (connected) drawBlue();
