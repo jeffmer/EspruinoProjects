@@ -18,8 +18,6 @@ function drawBat(v){
   g.fillRect(x+4,y+6,x+4+Math.ceil(v*(s-12)/100),y+17);
 }
 
-var connected = false;
-
 function drawBlue(){
   g.drawImage(atob("CxQBBgDgFgJgR4jZMawfAcA4D4NYybEYIwTAsBwDAA=="), 4, 2);
 }
@@ -30,6 +28,10 @@ function drawCharging(){
 
 function drawAlarm(){
   g.drawImage(atob("GBgBAAAAAAAAABgADhhwDDwwGP8YGf+YMf+MM//MM//MA//AA//AA//AA//AA//AA//AB//gD//wD//wAAAAADwAABgAAAAAAAAA"),W/2,2);
+}
+
+function drawANCS(){
+  g.drawImage(atob("GBgBAAAABAAADgAAHwAAPwAAf4AAP4AAP4AAP4AAHwAAH4AAD8AAB+AAA/AAAfgAAf3gAH/4AD/8AB/+AA/8AAf4AAHwAAAgAAAA"),30,2);
 }
 
 function drawReading(x,y){
@@ -62,7 +64,8 @@ function drawDisp(){
   if (P2.alarmset) drawAlarm();
   MOON.draw(W-82,2)
   if (E.charging) drawCharging();
-  if (connected) drawBlue();
+  if (NRF.getSecurityStatus().connected) drawBlue();
+  if (NRF.ancsIsActive()) drawANCS();
   g.fillRect(W/2-7,30,W/2-5,106);
   drawReading(W/2,40);
   weather = zambretti(PressD.trend(),READING.pressure);
@@ -72,14 +75,12 @@ function drawDisp(){
 
 NRF.on("connect", function(a){
   drawBlue();
-  connected=true;
+  setTimeout(()=>{if (NRF.ancsIsActive()) {drawANCS();g.flip();}},1000);
   g.flip();
 });
   
 NRF.on("disconnect", function(a){
-  g.clearRect(4,100,20,120);
-  connected=false;
-  g.flip();
+  drawDisp();
 });
 
 E.on("charging",function(v){
@@ -106,6 +107,8 @@ function doDisp(id){
     Temp.draw();
   else if (id==4)
     Humd.draw();
+  else
+    g.clear();
 }
 
 doDisp(tdisp);
@@ -120,4 +123,14 @@ P2.setUI("leftright",(v)=>{
   doDisp(tdisp);
 });
 
+global.SCREENACCESS = {
+  request:function(){
+    doDisp(5);
+  },
+  release:function(){
+    doDisp(tdisp);
+  }
+}
 
+eval(STOR.read("ancs.js"));
+startancs();

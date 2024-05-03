@@ -39,13 +39,13 @@ function showAlarm(alarm) {
     load("clock.app.js");
   });
   function buzz() {
-    P2.alarmStart();
+    P2.alarmStart(20);
     setTimeout(()=>{
         P2.alarmStop();
         if(alarm.as) { // auto-snooze
             setTimeout(buzz, 600000);
         }
-      },30000);
+      },40000);
   }
   buzz();
 }
@@ -61,5 +61,5 @@ if (active.length) {
   setTimeout(()=>{showAlarm(active[0]);},500);
 } else {
   // otherwise just go back to default app
-   load("clock.app.js");
+   load("weather.app.js");
 }

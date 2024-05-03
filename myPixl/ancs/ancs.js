@@ -113,9 +113,8 @@ var unicodeRemap = {
     });
   }
   
-
-  if (!NRF.ancsIsActive()) NRF.disconnect(); // disconnect as it may be stuck in uart only service
   if (ENABLED && typeof SCREENACCESS!='undefined') {
+    if (!NRF.ancsIsActive()) NRF.disconnect(); // disconnect as it may be stuck in uart only service
     E.on("ANCS", getnotify);
     NRF.setServices(undefined,{ancs:true,cts:true});
   }
