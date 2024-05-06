@@ -1,6 +1,7 @@
 if (!P2.setUI) eval(STOR.read("setui.js"));
 eval(STOR.read("zambretti.js"));
 eval(STOR.read("moon.js"));
+eval(require("Storage").read("tide.js"));
 
 var W = g.getWidth();
 var H = g.getHeight();
@@ -57,19 +58,28 @@ function drawClock(x,y){
     g.drawString(dt,x,y+28);
 }
 
+var tdisp = 0;
+
+var TIDE = getTideClock("2024-04-08T19:07:00",125,61);
+
 function drawDisp(){
   g.clearRect(0,0,W-1,H-1);
-  drawClock(60,H/2-10);
+  g.setColor(1);
   drawBat(E.getBattery());
   if (P2.alarmset) drawAlarm();
   MOON.draw(W-82,2)
   if (E.charging) drawCharging();
   if (NRF.getSecurityStatus().connected) drawBlue();
   if (NRF.ancsIsActive()) drawANCS();
-  g.fillRect(W/2-7,30,W/2-5,106);
-  drawReading(W/2,40);
-  weather = zambretti(PressD.trend(),READING.pressure);
-  g.setFontAlign(-1,-1).setFont("6x8",1).drawString(weather,10,110);
+  if (tdisp==0) {
+    g.fillRect(W/2-7,30,W/2-5,106);
+    drawClock(60,H/2-10);
+    drawReading(W/2,40);
+    weather = zambretti(PressD.trend(),READING.pressure);
+    g.setFontAlign(-1,-1).setFont("6x8",1).drawString(weather,10,110);
+  } else {
+    TIDE.draw(); 
+  }
   g.flip();
 }
 
@@ -91,12 +101,11 @@ E.on("charging",function(v){
   g.flip();
 });
 
-var tdisp = 0;
 var iRef;
 
 function doDisp(id){
   if (iRef) clearInterval(iRef);
-  if (id==0){
+  if (id<=0){
     drawDisp();
     iRef = setInterval(drawDisp,30000);
   } else if (id==1)
@@ -117,7 +126,7 @@ P2.setUI("leftright",(v)=>{
   if (v) {
     tdisp += v;
     if (tdisp>4) tdisp=4;
-    if (tdisp<0) tdisp=0;
+    if (tdisp<-1) tdisp=-1;
   }
   else tdisp=0;
   doDisp(tdisp);
