@@ -2,6 +2,8 @@ if (!P2.setUI) eval(STOR.read("setui.js"));
 eval(STOR.read("zambretti.js"));
 eval(STOR.read("moon.js"));
 eval(require("Storage").read("tide.js"));
+var tideinfo = STOR.readJSON("tideinfo.json",1)||{place:"Sea", hightide:"2024-04-08T19:07:00"};
+
 
 var W = g.getWidth();
 var H = g.getHeight();
@@ -53,14 +55,14 @@ function drawClock(x,y){
     g.setFontAlign(0,0);
     g.setFontVector(36);
     g.drawString(tm,x,y);
-    g.setFontVector(20);
+    g.setFontVector(18);
     var dt=d[0]+" "+d[2]+" "+d[1];//+" "+d[3];
     g.drawString(dt,x,y+28);
 }
 
 var tdisp = 0;
 
-var TIDE = getTideClock("2024-04-08T19:07:00",125,61);
+var TIDE = getTideClock(tideinfo.hightide,125,61);
 
 function drawDisp(){
   g.clearRect(0,0,W-1,H-1);
@@ -72,12 +74,17 @@ function drawDisp(){
   if (NRF.getSecurityStatus().connected) drawBlue();
   if (NRF.ancsIsActive()) drawANCS();
   if (tdisp==0) {
-    g.fillRect(W/2-7,30,W/2-5,106);
+    g.drawLine(1,30,W-2,30);
+    g.drawLine(W/2-5,30,W/2-5,106);
     drawClock(60,H/2-10);
     drawReading(W/2,40);
     weather = zambretti(PressD.trend(),READING.pressure);
-    g.setFontAlign(-1,-1).setFont("6x8",1).drawString(weather,10,110);
+    g.drawRect(1,106,W-2,120);
+    g.setFontAlign(0,0).setFont("6x8",1).drawString(weather,W/2,113);
   } else {
+    g.setFontVector(24);
+    g.setFontAlign(1,1).drawString("Tides",245,120);
+    g.setFontAlign(-1,1).drawString(tideinfo.place,5,120);
     TIDE.draw(); 
   }
   g.flip();

@@ -1,7 +1,8 @@
 
 eval(require("Storage").read("tide.js"));
+var tideinfo = STOR.readJSON("tideinfo.json",1)||{place:"Cleder", hightide:"2024-04-08T19:07:00"};
 
-var TIDE = getTideClock("2024-04-08T19:07:00",185,61);
+var TIDE = getTideClock(tideinfo.hightide,185,61);
 
 const W = g.getWidth();
 const H = g.getHeight();
@@ -28,7 +29,7 @@ function drawAll() {
     g.setFontAlign(-1,-1);
     g.setFontVector(20);
     g.drawString("Tides:-",5,5);
-    g.setFontVector(30).drawString(" Cleder",5,30);;
+    g.setFontVector(30).drawString(tideinfo.place,5,30);;
     drawClock(5,70);
     // draw dial   
     TIDE.draw();
