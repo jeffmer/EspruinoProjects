@@ -29,8 +29,8 @@ function drawCharging(){
   g.drawImage(atob("DhgBHOBzgc4HOP////////////////////3/4HgB4AeAHgB4AeAHgB4AeAHg"),W-62,2);
 }
 
-function drawAlarm(){
-  g.drawImage(atob("GBgBAAAAAAAAABgADhhwDDwwGP8YGf+YMf+MM//MM//MA//AA//AA//AA//AA//AA//AB//gD//wD//wAAAAADwAABgAAAAAAAAA"),W/2,2);
+function drawAlarm(side){
+  g.drawImage(atob("GBgBAAAAAAAAABgADhhwDDwwGP8YGf+YMf+MM//MM//MA//AA//AA//AA//AA//AA//AB//gD//wD//wAAAAADwAABgAAAAAAAAA"),side?W-30:W/2,side?48:2);
 }
 
 function drawANCS(){
@@ -68,8 +68,8 @@ function drawDisp(){
   g.clearRect(0,0,W-1,H-1);
   g.setColor(1);
   drawBat(E.getBattery());
-  if (P2.alarmset) drawAlarm();
-  MOON.draw(W-82,2)
+  if (P2.alarmset) drawAlarm(tdisp<0);
+  MOON.draw(W-82,2);
   if (E.charging) drawCharging();
   if (NRF.getSecurityStatus().connected) drawBlue();
   if (NRF.ancsIsActive()) drawANCS();
