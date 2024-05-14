@@ -34,7 +34,7 @@ function showMainMenu() {
       editAlarm(idx);
     };
   });
-  menu['< Back'] =  ()=>{load("clock.app.js")};
+  menu['< Back'] =  ()=>{load("weather.app.js")};
   return E.showMenu(menu);
 }
 
